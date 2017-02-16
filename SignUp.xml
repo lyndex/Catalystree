@@ -108,7 +108,7 @@
             android:layout_marginTop="20dp"
             android:textSize="18sp"
             android:layout_gravity="center"
-            android:onClick="sendMessage"/>
+            android:onClick="signUp"/>
 
     <TextView
         android:text="@string/agreeing"
@@ -125,13 +125,14 @@
         android:weightSum="1">
 
         <Button
-                android:text="@string/terms"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/button_terms"
-                android:textColor="@color/green"
-                android:background="@color/transparent"
-                android:layout_weight="0.41" />
+            android:text="@string/terms"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_terms"
+            android:textColor="@color/green"
+            android:background="@color/transparent"
+            android:layout_weight="0.41"
+            android:onClick="terms"/>
 
         <TextView
             android:text="@string/and"
@@ -142,12 +143,13 @@
             android:layout_weight="0.41" />
 
         <Button
-                android:text="@string/privacy"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/button_privacy"
-                android:textColor="@color/green"
-                android:background="@color/transparent" />
+            android:text="@string/privacy"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_privacy"
+            android:textColor="@color/green"
+            android:background="@color/transparent"
+            android:onClick="privacy"/>
     </LinearLayout>
 
 </LinearLayout>

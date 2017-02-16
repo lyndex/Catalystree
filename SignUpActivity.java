@@ -12,9 +12,18 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
     }
-    public void sendMessage(View view) {
+    public void signUp (View view) {
+        Intent intent = new Intent(this, ActivityWelcome.class);
+        startActivity(intent);
+    }
+
+    public void terms (View view) {
+        Intent intent = new Intent(this, ActivityWelcome.class);
+        startActivity(intent);
+    }
+
+    public void privacy (View view) {
         Intent intent = new Intent(this, ActivityWelcome.class);
         startActivity(intent);
     }
     }
-

@@ -11,7 +11,7 @@
     tools:context="com.example.sam_2.catalystree.ActivityHome">
 
     <TextView
-        android:text="@string/hi"
+        android:text="@string/i_am_the_home_screen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"

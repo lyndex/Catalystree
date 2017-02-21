@@ -13,17 +13,17 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
     }
     public void signUp (View view) {
-        Intent intent = new Intent(this, ActivityWelcome.class);
+        Intent intent = new Intent(this, ActivityHome.class);
         startActivity(intent);
     }
 
     public void terms (View view) {
-        Intent intent = new Intent(this, ActivityWelcome.class);
+        Intent intent = new Intent(this, ActivityHome.class);
         startActivity(intent);
     }
 
     public void privacy (View view) {
-        Intent intent = new Intent(this, ActivityWelcome.class);
+        Intent intent = new Intent(this, ActivityHome.class);
         startActivity(intent);
     }
     }

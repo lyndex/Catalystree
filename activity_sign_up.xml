@@ -7,7 +7,7 @@
     android:paddingLeft="60dp"
     android:paddingRight="60dp"
     android:paddingTop="90dp"
-    tools:context="com.example.sam_2.catalystree.SignInActivity"
+    tools:context="com.example.sam_2.catalystree.SignUpActivity"
     android:background="#131714"
     android:orientation="vertical">
 

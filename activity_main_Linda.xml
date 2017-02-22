@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.letha.login">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
 
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity
-            android:label="@string/app_name"
-            android:name=".MainActivity" >
-            <intent-filter >
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:label="@string/app_name"
-            android:name=".Screen2" >
-        </activity>
-        <activity
-            android:name=".SignUpActivity"
-            android:label="@string/signup">
-        </activity>
-    </application>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:srcCompat="@mipmap/logo"
+        android:id="@+id/imageView3"
+        android:layout_weight="0.63" />
 
-</manifest>
+    <Button
+        android:text="@string/signup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button"
+        android:onClick="signUp"/>
+
+    <Button
+        android:text="@string/LogIn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button4" />
+
+</LinearLayout>

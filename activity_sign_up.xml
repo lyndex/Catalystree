@@ -1,129 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_sign_in"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="60dp"
-    android:paddingRight="60dp"
-    android:paddingTop="90dp"
-    tools:context="com.example.sam_2.catalystree.SignUpActivity"
-    android:background="#131714"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:background="@color/black">
 
-    <TextView
-        android:text="@string/signupwith"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView_signupwith"
-        android:textColor="@color/green"
-        android:layout_gravity="center"
-        android:textSize="20sp"
-        android:paddingBottom="10dp"/>
-
-    <TextView
-            android:text="@string/text_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:id="@+id/textView_username"
-            android:textColor="@color/green"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:inputType="text|textPersonName"
-            android:ems="10"
-            android:id="@+id/editText_username"
-            android:background="#FFFFFF" />
-
-        <TextView
-            android:text="@string/text_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_email"
-            android:textColor="@color/green"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:inputType="textEmailAddress"
-            android:ems="10"
-            android:id="@+id/editText_email"
-            android:background="#FFFFFF" />
-
-        <TextView
-            android:text="@string/text_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:id="@+id/textView_password"
-            android:textColor="@color/green"
-            android:layout_marginTop="10dp" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:inputType="textPassword"
-            android:ems="10"
-            android:id="@+id/editText_password"
-            android:background="@color/white"
-            android:textSize="20sp"/>
-
-        <Button
-            android:text="@string/button_signUp"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:id="@+id/button_signin"
-            android:background="@color/green"
-            android:layout_marginTop="20dp"
-            android:textSize="18sp"
-            android:layout_gravity="center"
-            android:onClick="signUp"/>
-
-    <TextView
-        android:text="@string/agreeing"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView3"
-        android:textColor="@color/white"
-        android:layout_gravity="center"/>
-
-    <LinearLayout
-        android:orientation="horizontal"
+    <EditText
+        android:id="@+id/editTextUserName"
+        android:hint="@string/user_name"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="1">
+        android:textColorHint="@color/lightGrey"
+        android:textColor="@color/lightGrey"
+        android:layout_height="wrap_content">
 
-        <Button
-            android:text="@string/terms"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/button_terms"
-            android:textColor="@color/green"
-            android:background="@color/transparent"
-            android:layout_weight="0.41"
-            android:onClick="terms"/>
+        <requestFocus />
+    </EditText>
 
-        <TextView
-            android:text="@string/and"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView2"
-            android:textColor="@color/white"
-            android:layout_weight="0.41" />
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/password"
+        android:textColorHint="@color/lightGrey"
+        android:textColor="@color/lightGrey"
+        android:inputType="textPassword" />
 
-        <Button
-            android:text="@string/privacy"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/button_privacy"
-            android:textColor="@color/green"
-            android:background="@color/transparent"
-            android:onClick="privacy"/>
-    </LinearLayout>
+    <EditText
+        android:id="@+id/editTextConfirmPassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/confirm_password"
+        android:textColor="@color/lightGrey"
+        android:textColorHint="@color/lightGrey"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/buttonCreateAccount"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/create_account"
+        android:background="@color/green"
+        android:layout_marginBottom="60dp" />
 
 </LinearLayout>

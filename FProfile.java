@@ -1,63 +1,26 @@
-package com.example.catalystreeapp;
+package com.example.catalystreeapp.Level1Fragment;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.catalystreeapp.R;
 
-public class FragmentProfile extends Fragment {
-
-
-    public FragmentProfile() {
+public class FProfile extends Fragment {
+String currentUser;
+    public FProfile() {
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
+//        fetch username TODO fix this pls
+        currentUser = getActivity().getIntent.getStringExtra("Username");
+
         return rootView;
     }
-
-////    create cursor
-//    public Cursor retrieveRecords(int category)
-//    {
-//        Cursor c = null;
-//
-//        c =db.rawQuery("SELECT id, username FROM people WHERE username = ?", new String[] {""});
-//        return c;
-//    }
-//
-////    retrieve data from cursor
-//    public void getDataFromDatabase()
-//    {
-//        try
-//        {
-//            Cursor cursor = null;
-//            db.OpenDatabase();
-//            cursor = db.retrieveRecords();
-//            if (cursor.getCount() != 0)
-//            {
-//                if (cursor.moveToFirst())
-//                {
-//                    do
-//                    {
-//                        titleArrayList.add(cursor.getString(cursor.getColumnIndex("title")));
-//                        bodyArrayList.add(cursor.getString(cursor.getColumnIndex("body")));
-//                    } while (cursor.moveToNext());
-//                }
-//                db.closeDatabase();
-//            }
-//            cursor.close();
-//        }
-//        catch(Exception e)
-//        {
-//            e.printStackTrace();
-//        }
-//    }
-//
 }
+

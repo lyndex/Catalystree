@@ -24,6 +24,7 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
     public FCar() {
     }
     CarDataBaseAdapter carDataBaseAdapter;
+    String currentUser;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
         final EditText editTextDistance, editTextHours, editTextMin;
         Button btnSubmitCar;
 //      create new car database
+//        todo WHYYYYYYYYYYYYYYY
         carDataBaseAdapter = new carDataBaseAdapter(this);
         carDataBaseAdapter = carDataBaseAdapter.open();
 
@@ -69,7 +71,7 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
             public void onClick(View v) {
 
 //              take username entry from login/signup form via method in FProfile
-                String userName = currentUser.getText().toString();
+                String userName = currentUser;
                 String type = carSpinner.getSelectedItem().toString();
 
 //                change distance to integer
@@ -96,7 +98,6 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
             }
             //          calculate method
             Integer time, hours, minutes;
-
             public void calculate() {
 //              changing hours to minutes
                 Integer hourToMin = hours / 60;

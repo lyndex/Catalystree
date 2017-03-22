@@ -13,10 +13,7 @@ import com.example.catalystreeapp.Level2Fragment.FTransportation;
 import com.example.catalystreeapp.Level3Fragment.FCar;
 import com.example.catalystreeapp.R;
 
-
-public class FInput extends Fragment
-//        implements View.OnClickListener
-{
+public class FInput extends Fragment {
 
     Button transportationButton;
 
@@ -42,20 +39,6 @@ public class FInput extends Fragment
                 transaction.commit();
             }
         });
-
         return myView;
-
         }
-
-//    public void setOnClickListener(View.OnClickListener listener){
-//        transportationButton.setOnClickListener(listener);
-//    }
-//
-//            @Override
-//    public void onClick(View v) {
-//
-//
-//
-//    }
 }
-

@@ -1,6 +1,6 @@
 package com.example.catalystreeapp.Level3Fragment;
 
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +14,13 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.catalystreeapp.CarDataBaseAdapter;
-import com.example.catalystreeapp.CarDataBaseHelper;
+import com.example.catalystreeapp.Level2Fragment.FTransportation;
+import com.example.catalystreeapp.Main.MainActivity;
 import com.example.catalystreeapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.R.id.list;
 
 public class FCar extends Fragment implements AdapterView.OnItemSelectedListener {
 
@@ -36,7 +36,7 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
         final View rootView = inflater.inflate(R.layout.fragment_car, container, false);
 //        declaring stuff, not sure why it has to be final
         final Spinner carSpinner;
-        final EditText editTextDistance, editTextHours, editTextMin;
+        final EditText editTextDistance, editTextMin;
         Button btnSubmitCar;
 
 //      create new car database
@@ -46,11 +46,13 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
         // Get References of Views
         carSpinner = (Spinner) rootView.findViewById(R.id.spinner_car_type);
         editTextDistance = (EditText) rootView.findViewById(R.id.editTextcarDistance);
-        editTextHours = (EditText) rootView.findViewById(R.id.editTextcarHours);
         editTextMin = (EditText) rootView.findViewById(R.id.editTextcarMin);
 
         // Spinner click listener
         carSpinner.setOnItemSelectedListener(this);
+
+//        set default spinner selection todo
+        carSpinner.setSelection(0);
 
         // Spinner Drop down elements
         List<String> categories = new ArrayList<>();
@@ -73,40 +75,33 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
 
             public void onClick(View v) {
 
-//              take username entry from login/signup form via method in FProfile
+//              take username entry from login / sign up form via method in FProfile
+//                todo also fix this current user thing
                 String userName = currentUser;
                 String type = carSpinner.getSelectedItem().toString();
 
-//                change distance to integer
-                int distance = Integer.parseInt(editTextDistance.getText().toString());
-//                change hours value to integer
-                int hours = Integer.parseInt(editTextHours.getText().toString());
-//                change minutes value to integer
-                int minutes = Integer.parseInt(editTextMin.getText().toString());
+//                convert distance to integer
+                int distance = 0;
+                try {
+                    distance = Integer.parseInt(editTextDistance.getText().toString());
+                } catch(NumberFormatException nfe) {
+                    System.out.println("Could not parse distance " + nfe);
+                }
+//                convert minutes to integer
+                int time = 0;
+                try {
+                    time = Integer.parseInt(editTextMin.getText().toString());
+                } catch(NumberFormatException nfe) {
+                    System.out.println("Could not parse minutes" + nfe);
+                }
 
-//              use calculate method
-                calculate();
-//todo also maybe just save as hours and minutes?
-//                todo change the to be integers into strings first to check if the box is empty
-                // check if any of the fields are vacant
-                if (userName.equals("") || type.equals("")) {
-                    Toast.makeText(getActivity().getApplicationContext(), "Field Vaccant", Toast.LENGTH_LONG).show();
-                    return;
-                } else {
                     // Save the Data in Database
-
                     carDataBaseAdapter.insertEntry(userName, type, distance, time);
                     Toast.makeText(getActivity().getApplicationContext(), "Data Saved", Toast.LENGTH_LONG).show();
 //                                              link back to input menu
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
                 }
-            }
-            //          calculate method
-            Integer time, hours, minutes;
-            public void calculate() {
-//              changing hours to minutes
-                Integer hourToMin = hours / 60;
-                time = hourToMin + minutes;
-            }
         }
         );
         return rootView;
@@ -121,5 +116,6 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
     }
     public void onNothingSelected(AdapterView<?> arg0) {
         // todo need to add stuff here
+
     }
 }

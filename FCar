@@ -1,5 +1,6 @@
 package com.example.catalystreeapp.Level3Fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,8 @@ import com.example.catalystreeapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.R.id.list;
+
 public class FCar extends Fragment implements AdapterView.OnItemSelectedListener {
 
     public FCar() {
@@ -30,21 +33,21 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 //        inflating the view
-        final View view = inflater.inflate(R.layout.fragment_car, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_car, container, false);
 //        declaring stuff, not sure why it has to be final
         final Spinner carSpinner;
         final EditText editTextDistance, editTextHours, editTextMin;
         Button btnSubmitCar;
+
 //      create new car database
-//        todo WHYYYYYYYYYYYYYYY
-        carDataBaseAdapter = new carDataBaseAdapter(this);
+        carDataBaseAdapter = new CarDataBaseAdapter(getActivity());
         carDataBaseAdapter = carDataBaseAdapter.open();
 
         // Get References of Views
-        carSpinner = (Spinner) getView().findViewById(R.id.spinner_car_type);
-        editTextDistance = (EditText) getView().findViewById(R.id.editTextcarDistance);
-        editTextHours = (EditText) getView().findViewById(R.id.editTextcarHours);
-        editTextMin = (EditText) getView().findViewById(R.id.editTextcarMin);
+        carSpinner = (Spinner) rootView.findViewById(R.id.spinner_car_type);
+        editTextDistance = (EditText) rootView.findViewById(R.id.editTextcarDistance);
+        editTextHours = (EditText) rootView.findViewById(R.id.editTextcarHours);
+        editTextMin = (EditText) rootView.findViewById(R.id.editTextcarMin);
 
         // Spinner click listener
         carSpinner.setOnItemSelectedListener(this);
@@ -65,7 +68,7 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
         carSpinner.setAdapter(dataAdapter);
 
 //      identifying the button
-        btnSubmitCar = (Button) getView().findViewById(R.id.button_car_submit);
+        btnSubmitCar = (Button) rootView.findViewById(R.id.button_car_submit);
         btnSubmitCar.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
@@ -83,7 +86,8 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
 
 //              use calculate method
                 calculate();
-
+//todo also maybe just save as hours and minutes?
+//                todo change the to be integers into strings first to check if the box is empty
                 // check if any of the fields are vacant
                 if (userName.equals("") || type.equals("")) {
                     Toast.makeText(getActivity().getApplicationContext(), "Field Vaccant", Toast.LENGTH_LONG).show();
@@ -105,7 +109,7 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
             }
         }
         );
-        return view;
+        return rootView;
     }
     //          spinner onclick
     @Override
@@ -116,6 +120,6 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
         Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
     }
     public void onNothingSelected(AdapterView<?> arg0) {
-        // TODO Auto-generated method stub
+        // todo need to add stuff here
     }
 }

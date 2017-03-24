@@ -1,19 +1,20 @@
-package com.example.sam_2.catalystree;
+package com.example.catalystreeapp.Users;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+        import android.app.Activity;
+        import android.content.Intent;
+        import android.os.Bundle;
+        import android.view.View;
+        import android.widget.Button;
+        import android.widget.EditText;
+        import android.widget.Toast;
 
-import com.example.sam_2.catalystree.LoginDataBaseAdapter;
-import com.example.sam_2.catalystree.R;
+        import com.example.catalystreeapp.Main.MainActivity;
+        import com.example.catalystreeapp.R;
 
-public class SignUPActivity extends Activity
+
+public class SignUpActivity extends Activity
 {
-    EditText editTextUserName,editTextPassword,editTextConfirmPassword;
+    EditText editTextUserName,editTextEmail,editTextPassword,editTextConfirmPassword;
     Button btnCreateAccount;
 
     LoginDataBaseAdapter loginDataBaseAdapter;
@@ -29,6 +30,8 @@ public class SignUPActivity extends Activity
 
         // Get References of Views
         editTextUserName=(EditText)findViewById(R.id.editTextUserName);
+
+        editTextEmail=(EditText)findViewById(R.id.editTextEmail);
         editTextPassword=(EditText)findViewById(R.id.editTextPassword);
         editTextConfirmPassword=(EditText)findViewById(R.id.editTextConfirmPassword);
 
@@ -36,14 +39,14 @@ public class SignUPActivity extends Activity
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                // TODO Auto-generated method stub
 
                 String userName=editTextUserName.getText().toString();
+                String email=editTextEmail.getText().toString();
                 String password=editTextPassword.getText().toString();
                 String confirmPassword=editTextConfirmPassword.getText().toString();
 
                 // check if any of the fields are vacant
-                if(userName.equals("")||password.equals("")||confirmPassword.equals(""))
+                if(userName.equals("")||email.equals("")||password.equals("")||confirmPassword.equals(""))
                 {
                     Toast.makeText(getApplicationContext(), "Field Vaccant", Toast.LENGTH_LONG).show();
                     return;
@@ -56,10 +59,9 @@ public class SignUPActivity extends Activity
                 else
                 {
                     // Save the Data in Database
-                    loginDataBaseAdapter.insertEntry(userName, password);
+                    loginDataBaseAdapter.insertEntry(userName, email, password);
                     Toast.makeText(getApplicationContext(), "Account Successfully Created ", Toast.LENGTH_LONG).show();
-
-                    Intent intent = new Intent(SignUPActivity.this, ActivityHome.class);
+                    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                     startActivity(intent);
                 }
             }
@@ -67,7 +69,7 @@ public class SignUPActivity extends Activity
     }
     @Override
     protected void onDestroy() {
-        // TODO Auto-generated method stub
+//        todo add stuff here
         super.onDestroy();
 
         loginDataBaseAdapter.close();

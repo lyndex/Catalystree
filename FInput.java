@@ -1,16 +1,14 @@
 package com.example.catalystreeapp.Level1Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-//import com.example.catalystreeapp.Level2Fragment.FCar;
 import com.example.catalystreeapp.Level2Fragment.FTransportation;
-import com.example.catalystreeapp.Level3Fragment.FCar;
 import com.example.catalystreeapp.R;
 
 public class FInput extends Fragment {
@@ -30,15 +28,10 @@ public class FInput extends Fragment {
         transportationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment newFragment = new FTransportation();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-                transaction.replace(R.id.fragment_transportation, newFragment);
-                transaction.addToBackStack(null);
-
-                transaction.commit();
+                Intent intent = new Intent(getActivity(), FTransportation.class);
+                startActivity(intent);
             }
         });
         return myView;
-        }
+    }
 }

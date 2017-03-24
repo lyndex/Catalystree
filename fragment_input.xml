@@ -1,20 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.catalystreeapp.Level1Fragment.FInput">
-
+    tools:context="com.example.catalystreeapp.Level1Fragment.FInput"
+    android:orientation="vertical"
+    android:background="@color/black"
+    android:paddingTop="120dp">
 
     <Button
         android:id="@+id/transportation_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Transportation"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="259dp"
-        android:layout_marginLeft="118dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
-</android.support.constraint.ConstraintLayout>
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:text="@string/transportation" />
+
+    <!--<Button-->
+        <!--android:id="@+id/climateControl_button"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="80dp"-->
+        <!--android:text="@string/climate_control" />-->
+
+    <!--<Button-->
+        <!--android:id="@+id/household_button"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="80dp"-->
+        <!--android:text="@string/household" />-->
+
+    <!--<Button-->
+        <!--android:id="@+id/devices_button"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="80dp"-->
+        <!--android:text="@string/devices" />-->
+</LinearLayout>

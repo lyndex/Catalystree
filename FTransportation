@@ -9,7 +9,6 @@ import android.widget.Button;
 
 import com.example.catalystreeapp.Level3Fragment.FCar;
 import com.example.catalystreeapp.R;
-//todo turn into activity
 
 public class FTransportation extends AppCompatActivity {
 

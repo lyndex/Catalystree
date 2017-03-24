@@ -1,10 +1,10 @@
-package com.example.sam_2.catalystree;
+package com.example.catalystreeapp.Users;
 
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+        import android.content.Context;
+        import android.database.sqlite.SQLiteDatabase;
+        import android.database.sqlite.SQLiteDatabase.CursorFactory;
+        import android.database.sqlite.SQLiteOpenHelper;
+        import android.util.Log;
 
 public class DataBaseHelper extends SQLiteOpenHelper
 {
@@ -17,7 +17,7 @@ public class DataBaseHelper extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase _db)
     {
-        _db.execSQL(LoginDataBaseAdapter.DATABASE_CREATE);
+        _db.execSQL(LoginDataBaseAdapter.CREATE_TABLE_QUERY);
 
     }
     // Called when there is a database version mismatch meaning that the version

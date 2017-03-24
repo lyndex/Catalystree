@@ -1,90 +1,110 @@
-package com.example.sam_2.catalystree;
+package com.example.catalystreeapp.Users;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.widget.Toast;
 
-public class LoginDataBaseAdapter
-{
-    static final String DATABASE_NAME = "login.db";
+public class LoginDataBaseAdapter {
+    static final String DATABASE_NAME = "catalystree.db";
     static final int DATABASE_VERSION = 1;
     public static final int NAME_COLUMN = 1;
 
-    // TODO: Create public field for each column in your table.
+    private static final String DATABASE_TABLE ="User";
+    public static final String COLUMN_ID = "ID";
+    public static final String COLUMN_USERNAME = "USERNAME";
+    public static final String COLUMN_EMAIL = "EMAIL";
+    public static final String COLUMN_PASSWORD = "PASSWORD";
 
     // SQL Statement to create a new database.
-    static final String DATABASE_CREATE = "create table "+"LOGIN"+
-            "( " +"ID"+" integer primary key autoincrement,"+ "USERNAME  text,PASSWORD text); ";
+    static final String CREATE_TABLE_QUERY =
+            "create table " + "User" +"( "
+            + "ID INTEGER PRIMARY KEY AUTOINCREMENT, USERNAME TEXT, EMAIL TEXT, PASSWORD TEXT);" ;
+
     // Variable to hold the database instance
-    public  SQLiteDatabase db;
+    public SQLiteDatabase db;
     // Context of the application using the database.
     private final Context context;
     // Database open/upgrade helper
     private DataBaseHelper dbHelper;
-    public  LoginDataBaseAdapter(Context _context)
-    {
+
+    public LoginDataBaseAdapter(Context _context) {
         context = _context;
         dbHelper = new DataBaseHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
-    public  LoginDataBaseAdapter open() throws SQLException
-    {
+
+    public LoginDataBaseAdapter open() throws SQLException {
         db = dbHelper.getWritableDatabase();
         return this;
     }
-    public void close()
-    {
+
+    public void close() {
         db.close();
     }
 
-    public  SQLiteDatabase getDatabaseInstance()
-    {
+    public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
 
-    public void insertEntry(String userName,String password)
-    {
+    public void insertEntry(String userName, String password, String email) {
         ContentValues newValues = new ContentValues();
         // Assign values for each row.
         newValues.put("USERNAME", userName);
-        newValues.put("PASSWORD",password);
+        newValues.put("Email", email);
+        newValues.put("PASSWORD", password);
 
         // Insert the row into your table
-        db.insert("LOGIN", null, newValues);
-        ///Toast.makeText(context, "Reminder Is Successfully Saved", Toast.LENGTH_LONG).show();
+        db.insert("User", null, newValues);
+
+        Toast.makeText(context, "Account is Successfully Created", Toast.LENGTH_LONG).show();
     }
 
-    public int deleteEntry(String UserName)
-    {
+    public int deleteEntry(String UserName) {
         //String id=String.valueOf(ID);
-        String where="USERNAME=?";
-        int numberOFEntriesDeleted= db.delete("LOGIN", where, new String[]{UserName}) ;
+        String where = "USERNAME=?";
+        int numberOFEntriesDeleted = db.delete("User", where, new String[]{UserName});
         // Toast.makeText(context, "Number fo Entry Deleted Successfully : "+numberOFEntriesDeleted, Toast.LENGTH_LONG).show();
         return numberOFEntriesDeleted;
     }
-    public String getSinlgeEntry(String userName)
-    {
-        Cursor cursor=db.query("LOGIN", null, " USERNAME=?", new String[]{userName}, null, null, null);
-        if(cursor.getCount()<1) // UserName Not Exist
+
+//    public String getSingleEntry(Integer ID) {
+//        Cursor cursor = db.query("User", null, null, new Integer[]{ID}, null, null, null);
+//        if (cursor.getCount() < 1) // UserName Not Exist
+//        {
+//            cursor.close();
+//            return "NOT EXIST";
+//        }
+//        cursor.moveToFirst();
+//        String password = cursor.getString(cursor.getColumnIndex("PASSWORD"));
+//        cursor.close();
+//        return password;
+//    }
+//
+//      get entry for the log in
+    public String getSingleEntry(String userName) {
+        Cursor cursor = db.query("User", null, " USERNAME=?", new String[]{userName}, null, null, null);
+        if (cursor.getCount() < 1) // UserName Not Exist
         {
             cursor.close();
             return "NOT EXIST";
         }
         cursor.moveToFirst();
-        String password= cursor.getString(cursor.getColumnIndex("PASSWORD"));
+        String password = cursor.getString(cursor.getColumnIndex("PASSWORD"));
         cursor.close();
         return password;
     }
-    public void  updateEntry(String userName,String password)
-    {
+
+    public void updateEntry(String userName, String password, String email) {
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.
         updatedValues.put("USERNAME", userName);
-        updatedValues.put("PASSWORD",password);
+        updatedValues.put("PASSWORD", password);
+        updatedValues.put("Email", email);
 
-        String where="USERNAME = ?";
-        db.update("LOGIN",updatedValues, where, new String[]{userName});
+        String where = "USERNAME = ?";
+        db.update("User", updatedValues, where, new String[]{userName});
     }
 }

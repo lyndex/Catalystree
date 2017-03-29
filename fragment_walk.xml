@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/fragment_car"
+    android:orientation="vertical">
+
+    <EditText
+        android:hint="@string/distance_km"
+        android:id="@+id/editTextWalkDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:textColor="@color/green"
+        android:textColorHint="@color/green"
+        android:textSize="20sp"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"/>
+
+    <EditText
+        android:hint="@string/minutes"
+        android:id="@+id/editTextWalkMin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:textColor="@color/green"
+        android:textColorHint="@color/green"
+        android:textSize="20sp"
+        android:layout_gravity="center"/>
+
+    <Button
+        android:id="@+id/button_walk_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/submit"
+        android:layout_gravity="center"/>
+
+</LinearLayout>

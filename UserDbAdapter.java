@@ -7,8 +7,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.Toast;
 
-public class LoginDataBaseAdapter {
-    static final String DATABASE_NAME = "catalystree.db";
+public class UserDbAdapter {
+    final String DATABASE_NAME = "catalystree.db";
     static final int DATABASE_VERSION = 1;
     public static final int NAME_COLUMN = 1;
 
@@ -21,34 +21,30 @@ public class LoginDataBaseAdapter {
     // SQL Statement to create a new database.
     static final String CREATE_TABLE_QUERY =
             "create table " + "User" +"( "
-            + "ID INTEGER PRIMARY KEY AUTOINCREMENT, USERNAME TEXT, EMAIL TEXT, PASSWORD TEXT);" ;
+                    + "ID INTEGER PRIMARY KEY AUTOINCREMENT, USERNAME TEXT, EMAIL TEXT, PASSWORD TEXT);" ;
 
     // Variable to hold the database instance
-    public SQLiteDatabase db;
+    public static SQLiteDatabase db;
     // Context of the application using the database.
-    private final Context context;
+    private  Context context;
     // Database open/upgrade helper
     private DataBaseHelper dbHelper;
 
-    public LoginDataBaseAdapter(Context _context) {
+    public UserDbAdapter(Context _context) {
         context = _context;
         dbHelper = new DataBaseHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public LoginDataBaseAdapter open() throws SQLException {
+    public UserDbAdapter open() throws SQLException {
         db = dbHelper.getWritableDatabase();
         return this;
-    }
-
-    public void close() {
-        db.close();
     }
 
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
 
-    public void insertEntry(String userName, String password, String email) {
+    public static void insertEntry(String userName, String password, String email) {
         ContentValues newValues = new ContentValues();
         // Assign values for each row.
         newValues.put("USERNAME", userName);
@@ -57,8 +53,6 @@ public class LoginDataBaseAdapter {
 
         // Insert the row into your table
         db.insert("User", null, newValues);
-
-        Toast.makeText(context, "Account is Successfully Created", Toast.LENGTH_LONG).show();
     }
 
     public int deleteEntry(String UserName) {
@@ -69,7 +63,7 @@ public class LoginDataBaseAdapter {
         return numberOFEntriesDeleted;
     }
 
-//    public String getSingleEntry(Integer ID) {
+    //    public String getSingleEntry(Integer ID) {
 //        Cursor cursor = db.query("User", null, null, new Integer[]{ID}, null, null, null);
 //        if (cursor.getCount() < 1) // UserName Not Exist
 //        {
@@ -107,4 +101,9 @@ public class LoginDataBaseAdapter {
         String where = "USERNAME = ?";
         db.update("User", updatedValues, where, new String[]{userName});
     }
+
+    public void close() {
+        db.close();
+    }
+
 }

@@ -15,7 +15,7 @@ package com.example.catalystreeapp.Users;
 public class WelcomeActivity extends Activity
 {
     Button btnSignIn,btnSignUp;
-    LoginDataBaseAdapter loginDataBaseAdapter;
+    UserDbAdapter userDbAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -24,8 +24,8 @@ public class WelcomeActivity extends Activity
         setContentView(R.layout.activity_welcome);
 
         // create a instance of SQLite Database
-        loginDataBaseAdapter=new LoginDataBaseAdapter(this);
-        loginDataBaseAdapter=loginDataBaseAdapter.open();
+        userDbAdapter =new UserDbAdapter(this);
+        userDbAdapter = userDbAdapter.open();
 
         // Get The Reference Of Buttons
         btnSignIn=(Button)findViewById(R.id.buttonSignIN);
@@ -63,7 +63,7 @@ public class WelcomeActivity extends Activity
                 String password=editTextPassword.getText().toString();
 
                 // fetch the Password form database for respective user name
-                String storedPassword=loginDataBaseAdapter.getSingleEntry(userName);
+                String storedPassword= userDbAdapter.getSingleEntry(userName);
 
                 // check if the Stored password matches with  Password entered by user
                 if(password.equals(storedPassword))
@@ -72,6 +72,7 @@ public class WelcomeActivity extends Activity
                     dialog.dismiss();
                     Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
 
+//                   todo is userName the password or what?
                     intent.putExtra("USERNAME_KEY", userName);
                     startActivity(intent);
 
@@ -79,7 +80,7 @@ public class WelcomeActivity extends Activity
                 }
                 else
                 {
-                    Toast.makeText(WelcomeActivity.this, "User Name or Password does not match", Toast.LENGTH_LONG).show();
+                    Toast.makeText(WelcomeActivity.this, "Username or Password does not match", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -91,6 +92,6 @@ public class WelcomeActivity extends Activity
     protected void onDestroy() {
         super.onDestroy();
         // Close The Database
-        loginDataBaseAdapter.close();
+        userDbAdapter.close();
     }
 }

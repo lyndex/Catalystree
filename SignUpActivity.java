@@ -17,7 +17,7 @@ public class SignUpActivity extends Activity
     EditText editTextUserName,editTextEmail,editTextPassword,editTextConfirmPassword;
     Button btnCreateAccount;
 
-    LoginDataBaseAdapter loginDataBaseAdapter;
+    UserDbAdapter userDbAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -25,8 +25,8 @@ public class SignUpActivity extends Activity
         setContentView(R.layout.activity_sign_up);
 
         // get Instance  of Database Adapter
-        loginDataBaseAdapter=new LoginDataBaseAdapter(this);
-        loginDataBaseAdapter=loginDataBaseAdapter.open();
+        userDbAdapter =new UserDbAdapter(this);
+        userDbAdapter = userDbAdapter.open();
 
         // Get References of Views
         editTextUserName=(EditText)findViewById(R.id.editTextUserName);
@@ -59,9 +59,11 @@ public class SignUpActivity extends Activity
                 else
                 {
                     // Save the Data in Database
-                    loginDataBaseAdapter.insertEntry(userName, email, password);
+                    UserDbAdapter.insertEntry(userName, email, password);
                     Toast.makeText(getApplicationContext(), "Account Successfully Created ", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+
+                    intent.putExtra("USERNAME_KEY", userName);
                     startActivity(intent);
                 }
             }
@@ -72,6 +74,6 @@ public class SignUpActivity extends Activity
 //        todo add stuff here
         super.onDestroy();
 
-        loginDataBaseAdapter.close();
+        userDbAdapter.close();
     }
 }

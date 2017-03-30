@@ -36,9 +36,9 @@ public class FProfile extends Fragment {
                 String currentUsername = intent.getStringExtra("USERNAME_KEY");
 ////        todo null pointer exception for username
                 txtname.setText(currentUsername);
-        currentUsername = getActivity().getIntent().getStringExtra("USERNAME_KEY");
-        TextView t = (TextView) getView().findViewById(R.id.txt_success_name);  //UPDATE
-        t.setText(currentUsername);
+//        currentUsername = getActivity().getIntent().getStringExtra("USERNAME_KEY");
+//        TextView t = (TextView) getView().findViewById(R.id.txt_success_name);  //UPDATE
+//        t.setText(currentUsername);
 
 
 
@@ -164,4 +164,4 @@ public class FProfile extends Fragment {
 //                return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2);
 //
 //            }
-        }
+        

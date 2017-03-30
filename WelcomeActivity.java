@@ -3,6 +3,7 @@ package com.example.catalystreeapp.Users;
         import android.app.Activity;
         import android.app.Dialog;
         import android.content.Intent;
+        import android.content.SharedPreferences;
         import android.os.Bundle;
         import android.view.View;
         import android.widget.Button;
@@ -57,6 +58,8 @@ public class WelcomeActivity extends Activity
         // Set On ClickListener
         btnSignIn.setOnClickListener(new View.OnClickListener() {
 
+
+
             public void onClick(View v) {
                 // get The User name and Password
                 String userName=editTextUserName.getText().toString();
@@ -71,6 +74,12 @@ public class WelcomeActivity extends Activity
                     Toast.makeText(WelcomeActivity.this, "Login Successful", Toast.LENGTH_LONG).show();
                     dialog.dismiss();
                     Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+
+//                    todo SP
+//                    SharedPreferences sharedPreferences = getSharedPreferences("your_preferences", Activity.MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = sharedPreferences.edit();
+//                    editor.putString("USERNAME_KEY", userName);
+//                    editor.commit();
 
 //                   todo is userName the password or what?
                     intent.putExtra("USERNAME_KEY", userName);

@@ -95,6 +95,13 @@ public class FProfile extends Fragment {
         currentUsername = getActivity().getIntent().getStringExtra("USERNAME_KEY");
         TextView t = (TextView) getView().findViewById(R.id.txt_success_name);  //UPDATE
         t.setText(currentUsername);
+//        if (boolean ) {
+//            // do something
+//        } else if (boolean expression) {
+//            // do something else
+//        } else {
+//            // do something else
+//        }
     }
 
 //            //this Method call when user pick an image from ImagePicker. e.g gallery

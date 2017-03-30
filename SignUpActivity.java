@@ -71,7 +71,7 @@ public class SignUpActivity extends Activity
     }
     @Override
     protected void onDestroy() {
-//        todo add stuff here
+//        add stuff here
         super.onDestroy();
 
         userDbAdapter.close();

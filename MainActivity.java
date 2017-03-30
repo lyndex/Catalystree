@@ -1,5 +1,7 @@
 package com.example.catalystreeapp.Main;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -20,11 +22,7 @@ import com.example.catalystreeapp.Level1Fragment.FSettings;
 import com.example.catalystreeapp.Level1Fragment.FUsage;
 import com.example.catalystreeapp.R;
 
-//import com.parse.Parse;
-//import com.parse.ParseObject;
-//import com.parse.ParseUser;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private String[] mNavigationDrawerItemTitles;
     private DrawerLayout mDrawerLayout;
@@ -33,12 +31,13 @@ public class MainActivity extends AppCompatActivity {
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     android.support.v7.app.ActionBarDrawerToggle mDrawerToggle;
+    String userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+         setContentView(R.layout.activity_main);
 
 //        set default displayed fragment
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
@@ -50,14 +49,22 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
+        String s = getIntent().getStringExtra("USERNAME_KEY");
 
-//      TODO GET LINKY WITH THE USERNAME
-//        ParseUser currentUser = ParseUser.getCurrentUser();
-//        if (currentUser != null) {
-//            // do stuff with the user
-//        } else {
-//            // show the signup or login screen
-//        }
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String value = extras.getString("USERNAME_KEY");
+            //The key argument here must match that used in the other activity
+        }
+
+//        SharedPreferences sharedPreferences = getSharedPreferences("your_preferences", Activity.MODE_PRIVATE);
+//        String currentUsername = sharedPreferences.getString("USERNAME_KEY", userName);
+
+//        Bundle bundle = new Bundle();
+//        bundle.getString("USERNAME_KEY", userName);
+// set Fragment class Arguments
+        FProfile frag = new FProfile();
+        frag.setArguments(extras);
 
         setupToolbar();
 
@@ -86,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             selectItem(position);
         }
-
     }
 
 //links to the drawer items

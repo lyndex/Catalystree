@@ -26,15 +26,23 @@ public class FProfile extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-//                TextView txtname = (TextView) getActivity().findViewById(R.id.txt_success_name);
+
+        TextView txtname = (TextView) getActivity().findViewById(R.id.txt_success_name);
+//
 //                TextView txtemail = (TextView) getActivity().findViewById(R.id.txt_success_email);
 //                dpImage = (ImageView) getActivity().findViewById(R.id.imgclick);
 
                 Intent intent = getActivity().getIntent();
-
-//                String loginEmail = intent.getStringExtra("EMAIL");
+                String currentUsername = intent.getStringExtra("USERNAME_KEY");
 ////        todo null pointer exception for username
-////                txtname.setText(username);
+                txtname.setText(currentUsername);
+        currentUsername = getActivity().getIntent().getStringExtra("USERNAME_KEY");
+        TextView t = (TextView) getView().findViewById(R.id.txt_success_name);  //UPDATE
+        t.setText(currentUsername);
+
+
+
+
 //                txtemail.setText(loginEmail);
 
 
@@ -91,10 +99,10 @@ public class FProfile extends Fragment {
             return rootView;
             }
 
-    public void setText(String currentUsername) {
-        currentUsername = getActivity().getIntent().getStringExtra("USERNAME_KEY");
-        TextView t = (TextView) getView().findViewById(R.id.txt_success_name);  //UPDATE
-        t.setText(currentUsername);
+//    public void setText(String currentUsername) {
+//        currentUsername = getActivity().getIntent().getStringExtra("USERNAME_KEY");
+//        TextView t = (TextView) getView().findViewById(R.id.txt_success_name);  //UPDATE
+//        t.setText(currentUsername);
 //        if (boolean ) {
 //            // do something
 //        } else if (boolean expression) {

@@ -9,19 +9,18 @@
         android:id="@+id/textview_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/type"
-        android:textColor="@color/green"
+        android:text="Car"
         android:textSize="20sp"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"/>
 
     <Spinner
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:id="@+id/spinner_car_type"
         android:layout_height="30dp"
-        android:layout_width="match_parent"
-        android:textColor="@color/green"
-        android:textSize="20sp" />
+        android:layout_width="wrap_content"
+        android:textSize="20sp"
+        android:layout_gravity="center" />
 
     <EditText
         android:hint="@string/distance_km"
@@ -30,8 +29,6 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="number"
-        android:textColor="@color/green"
-        android:textColorHint="@color/green"
         android:textSize="20sp"
         android:layout_gravity="center"/>
 
@@ -43,12 +40,11 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="number"
-        android:textColor="@color/green"
-        android:textColorHint="@color/green"
         android:textSize="20sp"
         android:layout_gravity="center"/>
 
     <Button
+        android:layout_marginTop="20dp"
         android:id="@+id/button_car_submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

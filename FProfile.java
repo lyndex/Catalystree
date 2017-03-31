@@ -5,16 +5,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
+import android.util.LogPrinter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.catalystreeapp.R;
 import com.example.catalystreeapp.Users.UserDbAdapter;
-import com.example.catalystreeapp.Users.WelcomeActivity;
-
 
 public class FProfile extends Fragment {
 
@@ -35,13 +36,25 @@ public class FProfile extends Fragment {
                 Intent intent = getActivity().getIntent();
                 String currentUsername = intent.getStringExtra("USERNAME_KEY");
 ////        todo null pointer exception for username
+//        Log.wtf(currentUsername, "ohon");
                 txtname.setText(currentUsername);
+        if (currentUsername == null)
+        {
+            currentUsername = "NULL NAME";
+//            Log.d(TAG, "onCreateView: NULL NAME");
+//            Toast.makeText(getActivity().getApplicationContext(), "NULL NAME", Toast.LENGTH_LONG).show();
+        }
+        else if (currentUsername.isEmpty())
+        {
+            currentUsername = "EMPTY NAME";
+//            Toast.makeText(getActivity().getApplicationContext(), "EMPTY NAME", Toast.LENGTH_LONG).show();
+
+        }
+        txtname.setText(currentUsername);
+
 //        currentUsername = getActivity().getIntent().getStringExtra("USERNAME_KEY");
 //        TextView t = (TextView) getView().findViewById(R.id.txt_success_name);  //UPDATE
 //        t.setText(currentUsername);
-
-
-
 
 //                txtemail.setText(loginEmail);
 
@@ -164,4 +177,4 @@ public class FProfile extends Fragment {
 //                return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2);
 //
 //            }
-        
+

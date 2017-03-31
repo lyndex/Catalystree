@@ -28,7 +28,7 @@ public class FProfile extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
 
-        TextView txtname = (TextView) getActivity().findViewById(R.id.txt_success_name);
+        TextView txtname = (TextView) rootView.findViewById(R.id.txt_success_name);
 //
 //                TextView txtemail = (TextView) getActivity().findViewById(R.id.txt_success_email);
 //                dpImage = (ImageView) getActivity().findViewById(R.id.imgclick);
@@ -36,21 +36,21 @@ public class FProfile extends Fragment {
                 Intent intent = getActivity().getIntent();
                 String currentUsername = intent.getStringExtra("USERNAME_KEY");
 ////        todo null pointer exception for username
-//        Log.wtf(currentUsername, "ohon");
-                txtname.setText(currentUsername);
-        if (currentUsername == null)
-        {
-            currentUsername = "NULL NAME";
-//            Log.d(TAG, "onCreateView: NULL NAME");
-//            Toast.makeText(getActivity().getApplicationContext(), "NULL NAME", Toast.LENGTH_LONG).show();
-        }
-        else if (currentUsername.isEmpty())
-        {
-            currentUsername = "EMPTY NAME";
-//            Toast.makeText(getActivity().getApplicationContext(), "EMPTY NAME", Toast.LENGTH_LONG).show();
 
-        }
-        txtname.setText(currentUsername);
+                txtname.setText(currentUsername);
+//        if (txtname == null)
+//        {
+//            Toast.makeText(getActivity().getApplicationContext(), "NO TEXT VIEW DEFINED!!!", Toast.LENGTH_LONG).show();
+//        }
+//        if (currentUsername == null)
+//        {
+//            currentUsername = "NULL NAME";
+////            Toast.makeText(getActivity().getApplicationContext(), "NULL NAME", Toast.LENGTH_LONG).show();
+//        }
+//        else if (currentUsername.isEmpty())
+//        {
+//            currentUsername = "EMPTY NAME";
+//            Toast.makeText(getActivity().getApplicationContext(), "EMPTY NAME", Toast.LENGTH_LONG).show();
 
 //        currentUsername = getActivity().getIntent().getStringExtra("USERNAME_KEY");
 //        TextView t = (TextView) getView().findViewById(R.id.txt_success_name);  //UPDATE

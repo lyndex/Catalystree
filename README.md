@@ -1,3 +1,4 @@
+*Click edit to read this properly*
 To eat donuts, add:
 allprojects {
 	repositories {

@@ -1,14 +1,84 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.catalystreeapp.Main.MainActivity">
+package com.example.catalystreeapp.MainFragments;
 
-    <com.github.mikephil.charting.charts.PieChart
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/PieChart">
-    </com.github.mikephil.charting.charts.PieChart>
-</RelativeLayout>
+import android.graphics.Color;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.example.catalystreeapp.R;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+
+import java.util.ArrayList;
+
+public class FUsage extends Fragment {
+
+    private static String TAG = "DailyGraph";
+    private float[] yData = {25.3f, 10.6f, 66.76f};
+    private String[] xData = {"frozen cod", "six", "stool"};
+    //    declare piechart as global variable
+    PieChart pieChart;
+
+    public FUsage() {
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        View myView = inflater.inflate(R.layout.fragment_usage, container, false);
+//      setContentView(R.layout.dailygraph);
+        Log.d(TAG, "onCreate: starting to create chart");
+
+        pieChart = (PieChart) myView.findViewById(R.id.PieChart);
+
+//        pieChart.setDescription("Energy Usage by Sector");
+//        enable piechart rotation
+        pieChart.setRotationEnabled(true);
+
+//        add data to the chart
+        addDataSet();
+
+        return myView;
+    }
+
+    private void addDataSet() {
+        Log.d(TAG, "addDataSet started");
+        ArrayList<PieEntry> yEntries = new ArrayList<>();
+        ArrayList<String> xEntries = new ArrayList<>();
+
+        for(int i = 0; i < yData.length; i++){
+            yEntries.add(new PieEntry(yData[i], i));
+        }
+        for(int i = 1; i < xData.length; i++){
+            xEntries.add(xData[i]);
+        }
+//      create data set
+        PieDataSet pieDataSet = new PieDataSet(yEntries, "items");
+        pieDataSet.setSliceSpace(1);
+        pieDataSet.setValueTextSize(12);
+
+//      add colors
+        ArrayList<Integer> colors = new ArrayList<>();
+        colors.add(Color.MAGENTA);
+        colors.add(Color.GRAY);
+        colors.add(Color.GREEN);
+
+        pieDataSet.setColors(colors);
+
+//        add legend
+        Legend legend = pieChart.getLegend();
+        legend.setForm(Legend.LegendForm.SQUARE);
+        legend.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
+
+//        create pie data object
+        PieData pieData = new PieData(pieDataSet);
+        pieChart.setData(pieData);
+        pieChart.invalidate();
+    }
+}

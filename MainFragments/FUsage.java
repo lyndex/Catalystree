@@ -19,10 +19,12 @@ import java.util.ArrayList;
 
 public class FUsage extends Fragment {
 
+    int Transportation, ClimateControl, Household;
+
     private static String TAG = "DailyGraph";
-    private float[] yData = {25.3f, 10.6f, 66.76f};
-    private String[] xData = {"frozen cod", "six", "stool"};
-    //    declare piechart as global variable
+    private float[] yData = {Transportation, ClimateControl, Household};
+    private String[] xData = {"Transportation", "Climate Control", "Household"};
+    //    declare pie chart as global variable
     PieChart pieChart;
 
     public FUsage() {
@@ -32,13 +34,13 @@ public class FUsage extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View myView = inflater.inflate(R.layout.fragment_usage, container, false);
-//      setContentView(R.layout.dailygraph);
+//      setContentView(R.layout.daily graph);
         Log.d(TAG, "onCreate: starting to create chart");
 
         pieChart = (PieChart) myView.findViewById(R.id.PieChart);
 
 //        pieChart.setDescription("Energy Usage by Sector");
-//        enable piechart rotation
+//        enable pie chart rotation
         pieChart.setRotationEnabled(true);
 
 //        add data to the chart
@@ -75,6 +77,7 @@ public class FUsage extends Fragment {
         Legend legend = pieChart.getLegend();
         legend.setForm(Legend.LegendForm.SQUARE);
         legend.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
+        legend.setTextColor(Color.WHITE);
 
 //        create pie data object
         PieData pieData = new PieData(pieDataSet);

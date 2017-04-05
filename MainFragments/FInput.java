@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.catalystreeapp.InputActivities.FClimate;
+import com.example.catalystreeapp.InputActivities.FHousehold;
 import com.example.catalystreeapp.InputActivities.FTransportation;
 import com.example.catalystreeapp.R;
 
@@ -50,7 +51,7 @@ public class FInput extends Fragment {
         householdButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), FClimate.class);
+                Intent intent = new Intent(getActivity(), FHousehold.class);
                 startActivity(intent);
             }
         });

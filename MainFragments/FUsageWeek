@@ -1,0 +1,118 @@
+package com.example.catalystreeapp.MainFragments;
+
+import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+
+import com.example.catalystreeapp.R;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import java.util.ArrayList;
+
+public class FUsageWeek extends Fragment {
+
+    private static String TAG = "DailyGraph";
+    private float[] yData = {5, 6, 8};
+    private float[] xData = {1, 2, 3};
+    //    declare pie chart as global variable
+    LineChart linechart;
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        View myView = inflater.inflate(R.layout.fragment_usage_week, container, false);
+        Log.d(TAG, "onCreate: starting to create line chart");
+
+        linechart = (LineChart) myView.findViewById(R.id.lineChart);
+
+        linechart.setBackgroundColor(Color.WHITE);
+        linechart.setDescription(null);
+
+//        linechart.setsomething
+        DataSet();
+
+        Button b_pie = (Button) myView.findViewById(R.id.b_pie);
+        b_pie.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Fragment frag = new FUsage();
+                frag.setArguments(getActivity().getIntent().getExtras());
+
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, frag).commit();
+            }
+        });
+
+        Button b_home = (Button) myView.findViewById(R.id.b_home);
+        b_home.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Fragment frag = new FHome();
+                frag.setArguments(getActivity().getIntent().getExtras());
+
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, frag).commit();
+            }
+        });
+
+//        button for tips
+        Button b_tips = (Button) myView.findViewById(R.id.b_tips);
+        b_tips.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                intent.setData(Uri.parse("https://catalystree.wordpress.com/"));
+                startActivity(intent);
+            }
+        });
+        return myView;
+    }
+
+    private void DataSet() {
+        Log.d(TAG, "addDataSet line started");
+        ArrayList<Entry> xEntries = new ArrayList<>();
+        ArrayList<Entry> yEntries = new ArrayList<>();
+
+        LineDataSet set1;
+
+        for(int i = 0; i < yData.length; i++){
+            yEntries.add(new Entry(yData[i], i));
+        }
+        for(int i = 1; i < xData.length; i++){
+            xEntries.add(new Entry(xData[i], i));
+        }
+        // create a dataset and give it a type
+        set1 = new LineDataSet(yEntries, "DataSet 1");
+        set1.setFillAlpha(110);
+        // set1.setFillColor(Color.RED);
+
+        // set the line to be drawn like this "- - - - - -"
+        // set1.enableDashedLine(10f, 5f, 0f);
+        // set1.enableDashedHighlightLine(10f, 5f, 0f);
+        set1.setColor(Color.BLACK);
+        set1.setCircleColor(Color.BLACK);
+        set1.setLineWidth(1f);
+        set1.setCircleRadius(3f);
+        set1.setDrawCircleHole(false);
+        set1.setValueTextSize(9f);
+        set1.setDrawFilled(true);
+
+//        ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+//        dataSets.add(set1); // add the datasets
+
+        // create a data object with the datasets
+        LineData data = new LineData(set1);
+        linechart.setData(data);
+        linechart.invalidate();
+    }
+}

@@ -1,26 +1,30 @@
-package com.example.catalystreeapp;
+package com.example.catalystreeapp.Transportation;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class CarDataBaseAdapter {
 
+    private static String TAG = "CarDataBaseAdapter";
     private static final String DATABASE_NAME = "catalystree.db";
     private static final int DATABASE_VERSION = 1;
     public static final int NAME_COLUMN = 1;
     private static final String DATABASE_TABLE ="CAR";
 
     public static final String COLUMN_USERNAME = "USERNAME";
+    public static final String COLUMN_DATE = "DATE";
     public static final String COLUMN_TYPE = "TYPE";
     public static final String COLUMN_DISTANCE = "DISTANCE";
     public static final String COLUMN_TIME = "TIME";
 
     // SQL Statement to create a new database.
     static final String DATABASE_CREATE = "create table"+" CAR" +
-            "( " + "USERNAME text, TYPE text, DISTANCE int, TIME int);";
+            "( " + "USERNAME text, DATE text, TYPE text, DISTANCE int, TIME int);";
     // Variable to hold the database instance
     public SQLiteDatabase db;
     // Context of the application using the database.
@@ -33,7 +37,7 @@ public class CarDataBaseAdapter {
         dbHelper = new CarDataBaseHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public com.example.catalystreeapp.CarDataBaseAdapter open() throws SQLException {
+    public CarDataBaseAdapter open() throws SQLException {
         db = dbHelper.getWritableDatabase();
         return this;
     }
@@ -46,10 +50,12 @@ public class CarDataBaseAdapter {
         return db;
     }
 
-    public void insertEntry(String USERNAME, String type, Integer distance, Integer time) {
+
+    public void insertEntry(String username, String date, String type, Integer distance, Integer time) {
         ContentValues newValues = new ContentValues();
         // Assign values for each row.
-        newValues.put("USERNAME", USERNAME);
+        newValues.put("USERNAME", username);
+        newValues.put("DATE", date);
         newValues.put("TYPE", type);
         newValues.put("DISTANCE", distance);
         newValues.put("TIME", time);
@@ -58,16 +64,16 @@ public class CarDataBaseAdapter {
         db.insert("CAR", null, newValues);
         ///Toast.makeText(context, "Reminder Is Successfully Saved", Toast.LENGTH_LONG).show();
     }
-    public int deleteEntry(String UserName) {
+    public int deleteEntry(String username) {
         //String id=String.valueOf(ID);
         String where = "ID=?";
-        int numberOFEntriesDeleted = db.delete("LOGIN", where, new String[]{UserName});
+        int numberOFEntriesDeleted = db.delete("CAR", where, new String[]{username});
         // Toast.makeText(context, "Number fo Entry Deleted Successfully : "+numberOFEntriesDeleted, Toast.LENGTH_LONG).show();
         return numberOFEntriesDeleted;
     }
 
-    public String getSinlgeEntry(String userName) {
-        Cursor cursor = db.query("CAR", null, " USERNAME=?", new String[]{userName}, null, null, null);
+    public String getSinlgeEntry(String username) {
+        Cursor cursor = db.query("CAR", null, " USERNAME=?", new String[]{username}, null, null, null);
         if (cursor.getCount() < 1) // UserName Not Exist
         {
             cursor.close();
@@ -78,16 +84,29 @@ public class CarDataBaseAdapter {
         cursor.close();
         return type;
     }
+//    get the date and stuff
+    public static String getCarEntry(String username) {
+        Cursor cursor = db.query("CAR", null, " USERNAME=?", new String[]{username}, null, null, null);
+        if (cursor.getCount() < 1) // UserName Not Exist
+        {
+            cursor.close();
+            Log.d(TAG, "getCarEntry: username does not exist");
+        }
+        cursor.moveToFirst();
+        Integer date = cursor.getInt(cursor.getColumnIndex("DATE"));
+        cursor.close();
+        return date;
+    }
 
-    public void updateEntry(String userName, String password, String email) {
+    public void updateEntry(String username, String password, String email) {
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.
-        updatedValues.put("USERNAME", userName);
+        updatedValues.put("USERNAME", username);
         updatedValues.put("PASSWORD", password);
         updatedValues.put("Email", email);
 
         String where = "USERNAME = ?";
-        db.update("LOGIN", updatedValues, where, new String[]{userName});
+        db.update("LOGIN", updatedValues, where, new String[]{username});
     }
 }

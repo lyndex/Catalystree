@@ -1,0 +1,23 @@
+04-09 09:46:20.705 16134-16134/com.example.catalystreeapp E/AndroidRuntime: FATAL EXCEPTION: main
+                                                                            Process: com.example.catalystreeapp, PID: 16134
+                                                                            java.lang.NullPointerException
+                                                                                at com.example.catalystreeapp.MainFragments.FUsageEnergyW.onCreateView(FUsageEnergyW.java:49)
+                                                                                at android.support.v4.app.Fragment.performCreateView(Fragment.java:2189)
+                                                                                at android.support.v4.app.FragmentManagerImpl.moveToState(FragmentManager.java:1299)
+                                                                                at android.support.v4.app.FragmentManagerImpl.moveFragmentToExpectedState(FragmentManager.java:1528)
+                                                                                at android.support.v4.app.FragmentManagerImpl.moveToState(FragmentManager.java:1595)
+                                                                                at android.support.v4.app.BackStackRecord.executeOps(BackStackRecord.java:757)
+                                                                                at android.support.v4.app.FragmentManagerImpl.executeOps(FragmentManager.java:2355)
+                                                                                at android.support.v4.app.FragmentManagerImpl.executeOpsTogether(FragmentManager.java:2146)
+                                                                                at android.support.v4.app.FragmentManagerImpl.optimizeAndExecuteOps(FragmentManager.java:2098)
+                                                                                at android.support.v4.app.FragmentManagerImpl.execPendingActions(FragmentManager.java:2008)
+                                                                                at android.support.v4.app.FragmentManagerImpl$1.run(FragmentManager.java:710)
+                                                                                at android.os.Handler.handleCallback(Handler.java:808)
+                                                                                at android.os.Handler.dispatchMessage(Handler.java:103)
+                                                                                at android.os.Looper.loop(Looper.java:193)
+                                                                                at android.app.ActivityThread.main(ActivityThread.java:5322)
+                                                                                at java.lang.reflect.Method.invokeNative(Native Method)
+                                                                                at java.lang.reflect.Method.invoke(Method.java:515)
+                                                                                at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:829)
+                                                                                at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:645)
+                                                                                at dalvik.system.NativeStart.main(Native Method)

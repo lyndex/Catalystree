@@ -40,10 +40,13 @@ public class FUsageEnergyW extends Fragment {
 
         View myView = inflater.inflate(R.layout.fragment_usage_energy, container, false);
         Log.d(TAG, "onCreate: starting to create line chart");
+//        xml
         linechart = (LineChart) myView.findViewById(R.id.linechart_energy);
         Intent intent = getActivity().getIntent();
+//        passed username used to identify user
         String username = intent.getStringExtra("USERNAME_KEY");
 
+//        convert cursor to array
         Cursor c = carDataBaseAdapter.getCarEntry(username);
         int count = 7;
 
@@ -58,20 +61,24 @@ public class FUsageEnergyW extends Fragment {
         }
         c.close();
 
+//        create array for y values
         ArrayList<Entry> yVals = new ArrayList<Entry>();
 
         for (int i = 0; i < date.length; i++) {
             yVals.add(new Entry((float) distance[i], i));
         }
-        final ArrayList<String> xVals = new ArrayList<String>();//array legend
-
+        
+//        create array for x values
+        final ArrayList<String> xVals = new ArrayList<String>();
+        
         for (int i = 0; i < date.length; i++)
             xVals.add(date[m % date.length]);
 
+//        creating dataset
         LineDataSet set1 = new LineDataSet(yVals, "Energy Consumed(kJ)");
-
         LineData data = new LineData(set1);
 
+//        formatting so that strings can be displayed on the x axis
         XAxis xAxis = linechart.getXAxis();
         xAxis.setValueFormatter(new IAxisValueFormatter() {
 

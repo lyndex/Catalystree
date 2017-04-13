@@ -1,118 +1,205 @@
 package com.example.catalystreeapp.MainFragments;
 
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.Toast;
 
+import com.example.catalystreeapp.Main.MainActivity;
 import com.example.catalystreeapp.R;
+import com.example.catalystreeapp.Transportation.CarDataBaseAdapter;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+
 import java.util.ArrayList;
 
-public class FUsageWeek extends Fragment {
+public class FUsageEnergyW extends Fragment {
 
-    private static String TAG = "DailyGraph";
-    private float[] yData = {5, 6, 8};
-    private float[] xData = {1, 2, 3};
-    //    declare pie chart as global variable
+    private static String TAG = "Energy Weekly Graph";
     LineChart linechart;
-
+    CarDataBaseAdapter carDataBaseAdapter;
+    Context context;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View myView = inflater.inflate(R.layout.fragment_usage_week, container, false);
+        context = getActivity();
+        View myView = inflater.inflate(R.layout.fragment_usage_energy, container, false);
         Log.d(TAG, "onCreate: starting to create line chart");
+//        xml
+        linechart = (LineChart) myView.findViewById(R.id.linechart_energy);
+        Intent intent = getActivity().getIntent();
+//        passed username used to identify user
+        String currentUsername = intent.getStringExtra("USERNAME_KEY");
 
-        linechart = (LineChart) myView.findViewById(R.id.lineChart);
-
-        linechart.setBackgroundColor(Color.WHITE);
-        linechart.setDescription(null);
-
-//        linechart.setsomething
-        DataSet();
-
-        Button b_pie = (Button) myView.findViewById(R.id.b_pie);
-        b_pie.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Fragment frag = new FUsage();
-                frag.setArguments(getActivity().getIntent().getExtras());
-
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_frame, frag).commit();
-            }
-        });
-
-        Button b_home = (Button) myView.findViewById(R.id.b_home);
-        b_home.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Fragment frag = new FHome();
-                frag.setArguments(getActivity().getIntent().getExtras());
-
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_frame, frag).commit();
-            }
-        });
-
-//        button for tips
-        Button b_tips = (Button) myView.findViewById(R.id.b_tips);
-        b_tips.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setData(Uri.parse("https://catalystree.wordpress.com/"));
-                startActivity(intent);
-            }
-        });
-        return myView;
-    }
-
-    private void DataSet() {
-        Log.d(TAG, "addDataSet line started");
-        ArrayList<Entry> xEntries = new ArrayList<>();
-        ArrayList<Entry> yEntries = new ArrayList<>();
-
-        LineDataSet set1;
-
-        for(int i = 0; i < yData.length; i++){
-            yEntries.add(new Entry(yData[i], i));
+//        todo current username is empty
+                if (currentUsername == null)
+        {
+            Toast.makeText(getActivity().getApplicationContext(), "currentUsername empty", Toast.LENGTH_LONG).show();
         }
-        for(int i = 1; i < xData.length; i++){
-            xEntries.add(new Entry(xData[i], i));
+        else if (currentUsername.isEmpty())
+        {
+            currentUsername = "EMPTY NAME";
+            Toast.makeText(getActivity().getApplicationContext(), "EMPTY NAME", Toast.LENGTH_LONG).show();
+
+
+            carDataBaseAdapter = new CarDataBaseAdapter(getActivity());
+            carDataBaseAdapter = carDataBaseAdapter.open();
+
+//        convert cursor to array
+        Cursor carcursor = carDataBaseAdapter.getCarEntry(currentUsername);
+        int count = 7;
+
+        String[] date = new String[count];
+        Integer[] distance = new Integer[count];
+
+        int m;
+        for (m = 0; m < count; m++) {
+            carcursor.moveToNext();
+            date[m] = carcursor.getString(0);
+            distance[m] = carcursor.getInt(1);
         }
-        // create a dataset and give it a type
-        set1 = new LineDataSet(yEntries, "DataSet 1");
-        set1.setFillAlpha(110);
-        // set1.setFillColor(Color.RED);
+        carcursor.close();
 
-        // set the line to be drawn like this "- - - - - -"
-        // set1.enableDashedLine(10f, 5f, 0f);
-        // set1.enableDashedHighlightLine(10f, 5f, 0f);
-        set1.setColor(Color.BLACK);
-        set1.setCircleColor(Color.BLACK);
-        set1.setLineWidth(1f);
-        set1.setCircleRadius(3f);
-        set1.setDrawCircleHole(false);
-        set1.setValueTextSize(9f);
-        set1.setDrawFilled(true);
+//        create array for y values
+        ArrayList<Entry> yVals = new ArrayList<Entry>();
 
-//        ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-//        dataSets.add(set1); // add the datasets
+        for (int i = 0; i < date.length; i++) {
+            yVals.add(new Entry((float) distance[i], i));
+        }
 
-        // create a data object with the datasets
+//        create array for x values
+        final ArrayList<String> xVals = new ArrayList<String>();
+
+        for (int i = 0; i < date.length; i++)
+            xVals.add(date[m % date.length]);
+
+//        creating dataset
+        LineDataSet set1 = new LineDataSet(yVals, "Energy Consumed(kJ)");
         LineData data = new LineData(set1);
+
+//        formatting so that strings can be displayed on the x axis
+        XAxis xAxis = linechart.getXAxis();
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
+
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+
+                return xVals.get((int) value);
+            }
+        });
         linechart.setData(data);
         linechart.invalidate();
+
+    }
+    return myView;
     }
 }
+
+
+//        linechart.setBackgroundColor(Color.WHITE);
+//        linechart.setDescription(null);
+//        linechart.setDrawGridBackground(false);
+//        linechart.setEnabled(false);
+//        linechart.setDragEnabled(true);
+//        linechart.setScaleEnabled(false);
+//
+//
+//        DataSet();
+//
+//        Button b_pie = (Button) myView.findViewById(R.id.b_pie);
+//        b_pie.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                Fragment frag = new FUsageMoneyW();
+//                frag.setArguments(getActivity().getIntent().getExtras());
+//
+//                FragmentManager fragmentManager = getFragmentManager();
+//                fragmentManager.beginTransaction().replace(R.id.content_frame, frag).commit();
+//            }
+//        });
+//
+//        Button b_home = (Button) myView.findViewById(R.id.b_home);
+//        b_home.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                Fragment frag = new FHome();
+//                frag.setArguments(getActivity().getIntent().getExtras());
+//
+//                FragmentManager fragmentManager = getFragmentManager();
+//                fragmentManager.beginTransaction().replace(R.id.content_frame, frag).commit();
+//            }
+//        });
+//
+////        button for tips
+//        Button b_tips = (Button) myView.findViewById(R.id.b_tips);
+//        b_tips.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                Intent intent = new Intent();
+//                intent.setAction(Intent.ACTION_VIEW);
+//                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+//                intent.setData(Uri.parse("https://catalystree.wordpress.com/"));
+//                startActivity(intent);
+//            }
+//        });
+//        return myView;
+//    }
+//
+//
+//    private void DataSet() {
+//        Log.d(TAG, "addDataSet line started");
+//
+//
+//        ArrayList<Entry> xEntries = new ArrayList<>();
+//
+//        Integer[] xData = {1, 2, 3, 4, 5, 6, 7};
+//        String[] xDataLabel = {Day1, Day2, Day3, Day4, Day5, Day6, Day7};
+//
+//        ArrayList<Entry> yEntries = new ArrayList<>();
+//
+//        LineDataSet set1;
+//
+//        for(int i = 1; i < xData.length; i++){
+//            xEntries.add(new Entry(xData[i], i));
+//        }
+//
+//        for(int i = 0; i < yData.length; i++){
+//            yEntries.add(new Entry(yData[i], i));
+//        }
+//
+//
+//        // create a dataset and give it a type
+//        set1 = new LineDataSet(yEntries, "Daily Energy Use");
+//        set1.setFillAlpha(110);
+//        // set1.setFillColor(Color.RED);
+//
+//        // set the line to be drawn like this "- - - - - -"
+//        // set1.enableDashedLine(10f, 5f, 0f);
+//        // set1.enableDashedHighlightLine(10f, 5f, 0f);
+//        set1.setColor(Color.BLACK);
+//        set1.setCircleColor(Color.BLACK);
+//        set1.setLineWidth(1f);
+//        set1.setCircleRadius(3f);
+//        set1.setDrawCircleHole(false);
+//        set1.setValueTextSize(9f);
+//        set1.setDrawFilled(true);
+//
+////        ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+////        dataSets.add(set1); // add the datasets
+//
+//        // create a data object with the datasets
+//        LineData data = new LineData(set1);
+//        linechart.setData(data);
+//        linechart.invalidate();
+//    }
+//
+//}

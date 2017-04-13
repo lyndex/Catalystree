@@ -104,6 +104,7 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
                                                 Toast.makeText(getActivity().getApplicationContext(), "Data Saved", Toast.LENGTH_LONG).show();
 //                                              link back to input menu
                                                 Intent intent = new Intent(getActivity(), MainActivity.class);
+                                                intent.putExtra("USERNAME_KEY", username);
                                                 intent.putExtra("caller", "Input");
                                                 startActivity(intent);
 

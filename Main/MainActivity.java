@@ -1,7 +1,5 @@
 package com.example.catalystreeapp.Main;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -15,11 +13,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.catalystreeapp.Level1Fragment.FHome;
-import com.example.catalystreeapp.Level1Fragment.FInput;
-import com.example.catalystreeapp.Level1Fragment.FProfile;
-import com.example.catalystreeapp.Level1Fragment.FSettings;
-import com.example.catalystreeapp.Level1Fragment.FUsage;
+import com.example.catalystreeapp.MainFragments.FHome;
+import com.example.catalystreeapp.MainFragments.FInput;
+import com.example.catalystreeapp.MainFragments.FProfile;
+import com.example.catalystreeapp.MainFragments.FSettings;
+import com.example.catalystreeapp.MainFragments.FUsageEnergyW;
 import com.example.catalystreeapp.R;
 
 public class MainActivity extends AppCompatActivity{
@@ -31,18 +29,25 @@ public class MainActivity extends AppCompatActivity{
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     android.support.v7.app.ActionBarDrawerToggle mDrawerToggle;
-    String userName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
          setContentView(R.layout.activity_main);
 
 //        set default displayed fragment
-        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        tx.replace(R.id.content_frame, new FHome());
-        tx.commit();
+        String caller = getIntent().getStringExtra("caller");
+        if (caller.equals("Input")) {
+            FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
+            tx.replace(R.id.content_frame, new FInput());
+            tx.commit();
+        }
+        else {
+            FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
+            tx.replace(R.id.content_frame, new FHome());
+            tx.commit();
+        }
 
         mTitle = mDrawerTitle = getTitle();
         mNavigationDrawerItemTitles= getResources().getStringArray(R.array.navigation_drawer_items_array);
@@ -51,20 +56,23 @@ public class MainActivity extends AppCompatActivity{
 
         String s = getIntent().getStringExtra("USERNAME_KEY");
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String value = extras.getString("USERNAME_KEY");
+        Bundle profileextras = getIntent().getExtras();
+        if (profileextras != null) {
+            String value = profileextras.getString("USERNAME_KEY");
             //The key argument here must match that used in the other activity
         }
+        FProfile profile = new FProfile();
+        profile.setArguments(profileextras);
 
-//        SharedPreferences sharedPreferences = getSharedPreferences("your_preferences", Activity.MODE_PRIVATE);
-//        String currentUsername = sharedPreferences.getString("USERNAME_KEY", userName);
+//        todo doesnt work if two are attached
+        Bundle energyextras = getIntent().getExtras();
+        if (energyextras != null) {
+            String value = energyextras.getString("USERNAME_KEY");
+            //The key argument here must match that used in the other activity
+        }
+        FUsageEnergyW usageEnergyW = new FUsageEnergyW();
+        usageEnergyW.setArguments(energyextras);
 
-//        Bundle bundle = new Bundle();
-//        bundle.getString("USERNAME_KEY", userName);
-// set Fragment class Arguments
-        FProfile frag = new FProfile();
-        frag.setArguments(extras);
 
         setupToolbar();
 
@@ -84,7 +92,6 @@ public class MainActivity extends AppCompatActivity{
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         setupDrawerToggle();
-
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
@@ -112,7 +119,7 @@ public class MainActivity extends AppCompatActivity{
                 fragment = new FInput();
                 break;
             case 3:
-                fragment = new FUsage();
+                fragment = new FUsageEnergyW();
                 break;
             case 4:
                 fragment = new FSettings();
@@ -127,6 +134,10 @@ public class MainActivity extends AppCompatActivity{
 //            supposed to fix the get intent in PFragment
             FProfile frag = new FProfile();
             frag.setArguments(getIntent().getExtras());
+
+            FUsageEnergyW frag1 = new FUsageEnergyW();
+            frag1.setArguments(getIntent().getExtras());
+
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
@@ -161,6 +172,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mDrawerToggle.syncState();
+
     }
 
     void setupToolbar(){

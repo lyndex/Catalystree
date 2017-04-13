@@ -1,4 +1,4 @@
-package com.example.catalystreeapp.Level3Fragment;
+package com.example.catalystreeapp.Transportation;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,21 +13,22 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.catalystreeapp.CarDataBaseAdapter;
-import com.example.catalystreeapp.Level2Fragment.FTransportation;
 import com.example.catalystreeapp.Main.MainActivity;
 import com.example.catalystreeapp.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public class FCar extends Fragment implements AdapterView.OnItemSelectedListener {
 
     public FCar() {
     }
+
     CarDataBaseAdapter carDataBaseAdapter;
-    String currentUser;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,7 +52,7 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
         // Spinner click listener
         carSpinner.setOnItemSelectedListener(this);
 
-//        set default spinner selection todo
+//        set default spinner selection
         carSpinner.setSelection(0);
 
         // Spinner Drop down elements
@@ -73,39 +74,45 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
         btnSubmitCar = (Button) rootView.findViewById(R.id.button_car_submit);
         btnSubmitCar.setOnClickListener(new View.OnClickListener() {
 
-            public void onClick(View v) {
+                                            public void onClick(View v) {
 
 //              take username entry from login / sign up form via method in FProfile
-//                todo also fix this current user thing
-                String userName = currentUser;
-                String type = carSpinner.getSelectedItem().toString();
+//                String currentUser = getSingleEntry();
+                                                String username = getActivity().getIntent().getStringExtra("USERNAME_KEY");
+
+                                                String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+
+                                                String type = carSpinner.getSelectedItem().toString();
 
 //                convert distance to integer
-                int distance = 0;
-                try {
-                    distance = Integer.parseInt(editTextDistance.getText().toString());
-                } catch(NumberFormatException nfe) {
-                    System.out.println("Could not parse distance " + nfe);
-                }
+                                                int distance = 0;
+                                                try {
+                                                    distance = Integer.parseInt(editTextDistance.getText().toString());
+                                                } catch (NumberFormatException nfe) {
+                                                    System.out.println("Could not parse distance " + nfe);
+                                                }
 //                convert minutes to integer
-                int time = 0;
-                try {
-                    time = Integer.parseInt(editTextMin.getText().toString());
-                } catch(NumberFormatException nfe) {
-                    System.out.println("Could not parse minutes" + nfe);
-                }
+                                                int time = 0;
+                                                try {
+                                                    time = Integer.parseInt(editTextMin.getText().toString());
+                                                } catch (NumberFormatException nfe) {
+                                                    System.out.println("Could not parse minutes" + nfe);
+                                                }
 
-                    // Save the Data in Database
-                    carDataBaseAdapter.insertEntry(userName, type, distance, time);
-                    Toast.makeText(getActivity().getApplicationContext(), "Data Saved", Toast.LENGTH_LONG).show();
+                                                // Save the Data in Database
+                                                carDataBaseAdapter.insertEntry(username, date, type, distance, time);
+                                                Toast.makeText(getActivity().getApplicationContext(), "Data Saved", Toast.LENGTH_LONG).show();
 //                                              link back to input menu
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                startActivity(intent);
-                }
-        }
+                                                Intent intent = new Intent(getActivity(), MainActivity.class);
+                                                intent.putExtra("caller", "Input");
+                                                startActivity(intent);
+
+                                            }
+                                        }
         );
         return rootView;
     }
+
     //          spinner onclick
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -114,8 +121,9 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
         // Showing selected spinner item
         Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
     }
+
     public void onNothingSelected(AdapterView<?> arg0) {
-        // todo need to add stuff here
+        // need to add stuff here
 
     }
 }

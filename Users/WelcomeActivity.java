@@ -71,18 +71,12 @@ public class WelcomeActivity extends Activity
                 // check if the Stored password matches with  Password entered by user
                 if(password.equals(storedPassword))
                 {
-                    Toast.makeText(WelcomeActivity.this, "Login Successful", Toast.LENGTH_LONG).show();
+                    Toast.makeText(WelcomeActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                     Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
 
-//                    todo SP
-//                    SharedPreferences sharedPreferences = getSharedPreferences("your_preferences", Activity.MODE_PRIVATE);
-//                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                    editor.putString("USERNAME_KEY", userName);
-//                    editor.commit();
-
-//                   todo is userName the password or what?
                     intent.putExtra("USERNAME_KEY", userName);
+                    intent.putExtra("caller", "Home");
                     startActivity(intent);
 
                     finish();

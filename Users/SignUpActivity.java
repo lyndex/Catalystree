@@ -64,6 +64,7 @@ public class SignUpActivity extends Activity
                     Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
 
                     intent.putExtra("USERNAME_KEY", userName);
+                    intent.putExtra("caller", "Home");
                     startActivity(intent);
                 }
             }

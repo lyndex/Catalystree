@@ -1,4 +1,4 @@
-package com.example.catalystreeapp.Level3Fragment;
+package com.example.catalystreeapp.Transportation;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,20 +6,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.catalystreeapp.CarDataBaseAdapter;
 import com.example.catalystreeapp.Main.MainActivity;
 import com.example.catalystreeapp.R;
-import com.example.catalystreeapp.TransitDataBaseAdapter;
+import com.example.catalystreeapp.Users.SessionManagement;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class FTransit extends Fragment{
@@ -28,6 +25,7 @@ public class FTransit extends Fragment{
     }
 
     TransitDataBaseAdapter transitDataBaseAdapter;
+    SessionManagement session;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,6 +43,8 @@ public class FTransit extends Fragment{
         transitDataBaseAdapter = new TransitDataBaseAdapter(getActivity());
         transitDataBaseAdapter = transitDataBaseAdapter.open();
 
+        session = new SessionManagement(getActivity().getApplicationContext());
+
 //      identifying the button
         btnSubmitTransit = (Button) rootView.findViewById(R.id.button_transit_submit);
         btnSubmitTransit.setOnClickListener(new View.OnClickListener() {
@@ -53,8 +53,10 @@ public class FTransit extends Fragment{
 
 //              take username entry from login / sign up form via method in FProfile
 //                String currentUser = getSingleEntry();
-                                                    String username = getActivity().getIntent().getStringExtra("USERNAME_KEY");
+                                                    String username = session.getUsername();
 //                convert distance to integer
+                                                    String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+
                                                     int distance = 0;
                                                     try {
                                                         distance = Integer.parseInt(editTextDistance.getText().toString());
@@ -70,10 +72,11 @@ public class FTransit extends Fragment{
                                                     }
 
                                                     // Save the Data in Database
-                                                    transitDataBaseAdapter.insertEntry(username, distance, time);
+                                                    transitDataBaseAdapter.insertEntry(username, date, distance, time);
                                                     Toast.makeText(getActivity().getApplicationContext(), "Data Saved", Toast.LENGTH_LONG).show();
 //                                              link back to input menu
                                                     Intent intent = new Intent(getActivity(), MainActivity.class);
+                                                    intent.putExtra("caller", "Input");
                                                     startActivity(intent);
                                                 }
                                             }

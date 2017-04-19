@@ -1,0 +1,235 @@
+package com.example.catalystreeapp.MainFragments;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+
+import com.example.catalystreeapp.R;
+import com.example.catalystreeapp.Transportation.CarDataBaseAdapter;
+import com.example.catalystreeapp.Users.SessionManagement;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+
+public class FUsageEnergyW extends Fragment {
+
+    LineChart chart;
+    CarDataBaseAdapter carDataBaseAdapter;
+    Context context;
+    SessionManagement session;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        context = getActivity();
+        View myView = inflater.inflate(R.layout.fragment_usage_energy, container, false);
+        chart = (LineChart) myView.findViewById(R.id.linechart_energy);
+
+//        create linechart
+        chart = new LineChart(getActivity().getApplicationContext());
+//        customize linechart
+        chart.setNoDataText("No Data yet");
+        chart.setHighlightPerTapEnabled(true);
+        chart.setTouchEnabled(true);
+        chart.setDragEnabled(true);
+        chart.setScaleEnabled(true);
+        chart.setDrawGridBackground(false);
+        chart.setPinchZoom(true);
+        chart.setBackgroundColor(Color.LTGRAY);
+// set parse color later
+
+//        work on data
+        LineData data = new LineData();
+        data.setValueTextColor(Color.WHITE);
+        carDataBaseAdapter = new CarDataBaseAdapter(getActivity());
+        carDataBaseAdapter = carDataBaseAdapter.open();
+
+//        set data to line chart
+        chart.setData(data);
+
+//        get legend object
+        Legend l = chart.getLegend();
+
+//        customize legend
+        l.setTextColor(Color.WHITE);
+
+        XAxis xl = chart.getXAxis();
+        xl.setTextColor(Color.WHITE);
+        xl.setDrawGridLines(false);
+        xl.setAvoidFirstLastClipping(true);
+
+        YAxis yl = chart.getAxisLeft();
+        yl.setTextColor(Color.WHITE);
+        yl.setAxisMaximum(120f);
+        yl.setDrawGridLines(true);
+
+        YAxis y12 = chart.getAxisRight();
+        y12.setEnabled(false);
+
+
+
+
+        //        passed username used to identify user
+        session = new SessionManagement(getActivity().getApplicationContext());
+        String currentUsername = session.getUsername();
+
+//        convert cursor to array
+        int count = 7;
+        Cursor carCursor = carDataBaseAdapter.getCarEntry(currentUsername);
+
+        final String[] date = new String[count];
+        Integer[] distance = new Integer[count];
+
+        int m;
+        for (m = 0; m < count; m++) {
+            carCursor.moveToFirst();
+            carCursor.moveToNext();
+            date[m] = carCursor.getString(0);
+            distance[m] = carCursor.getInt(1);
+        }
+        carCursor.close();
+
+
+//        create array for y values
+        ArrayList<Entry> yVals = new ArrayList<>(Arrays.asList(bar_graph_values));
+        for(int i=0;i<bar_graph_values.length;i++)
+        {
+            BarEntry [] barentry = new BarEntry[bar_graph_values.length];
+            barentry[i] = new BarEntry(Float.valueOf(distance.get(i)),i);
+        }
+
+//        creating dataset
+        LineDataSet set1 = new LineDataSet(yVals, "Energy Consumed(kJ)");
+        data = new LineData(set1);
+
+//        formatting so that strings can be displayed on the x axis
+        IAxisValueFormatter formatter = new IAxisValueFormatter() {
+
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                return date[(int) value];
+            }
+
+            // we don't draw numbers, so no decimal digits needed
+            public int getDecimalDigits() {
+                return 0;
+            }
+        };
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setGranularity(1f); // minimum axis-step (interval) is 1
+        xAxis.setValueFormatter(formatter);
+        chart.setData(data);
+        chart.invalidate();
+
+//      button to money chart
+        Button b_pie = (Button) myView.findViewById(R.id.b_money);
+        b_pie.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Fragment frag = new FUsageMoneyW();
+                frag.setArguments(getActivity().getIntent().getExtras());
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, frag).commit();
+            }
+        });
+//      button to go home
+        Button b_home = (Button) myView.findViewById(R.id.b_home);
+        b_home.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Fragment frag = new FHome();
+                frag.setArguments(getActivity().getIntent().getExtras());
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, frag).commit();
+            }
+        });
+//        button for tips
+        Button b_tips = (Button) myView.findViewById(R.id.b_tips);
+        b_tips.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                intent.setData(Uri.parse("https://catalystree.wordpress.com/"));
+                startActivity(intent);
+            }
+        });
+//todo what is happening pls help
+//    private void setData(int count, float range) {
+//
+//        for (int i = 0; i < count; i++) {
+//
+//            float val = (float) distance;
+//            values.add(new Entry(i, val, getResources().getDrawable(R.drawable.star)));
+//        }
+//    }
+//}
+        return myView;
+    }
+//todo how to convert integer array to entry array
+    private void setData() {
+        ArrayList<String> xVals = new ArrayList<String>();
+        ArrayList<Entry> yVals = new ArrayList<Entry>();
+
+        xVals = new ArrayList<String>(Arrays.asList(bar_graph_names));
+        for(int i=0; i < bar_graph_values.length; i++) {
+            Entry entry = new Entry(Float.valueOf(bar_graph_values[i]), i);
+            yVals.add(entry);
+        }
+        LineDataSet newSet = new LineDataSet(yVals, "DataSet");
+        LineData data = new LineData(newSet);
+        chart.setData(data);
+    }
+}
+//method to add data
+//    private void addEntry() {
+//        LineData data = linechart.getData();
+//
+//        if (data !=null){
+//            LineDataSet set = (LineDataSet) data.getDataSetByIndex(0);
+//            if (set == null) {
+//                set = createSet();
+//                data.addDataSet(set);
+//            }
+////            add a new random value
+//            data.addXValue("");
+//            data.addEntry(
+//                    new Entry((float) (Math.random() *75) + 60f, set.getEntryCount()), 0);
+////            notify chart data has changed
+//            linechart.notifyDataSetChanged();
+////            limit number of visible entries
+//            linechart.setVisibleXRange(0,7);
+////            scroll to last entry
+//            linechart.moveViewToX(data.getXValsCount() - 7);
+//        }
+//    }
+//    private ArrayList<String> getXAxisValues() {
+//        ArrayList<String> xAxis = new ArrayList<>();
+//        return xAxis;
+//    }
+
+

@@ -12,6 +12,11 @@ import android.widget.Toast;
 
 import com.example.catalystreeapp.Main.MainActivity;
 import com.example.catalystreeapp.R;
+import com.example.catalystreeapp.Users.SessionManagement;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class FWater extends Fragment{
@@ -20,6 +25,7 @@ public class FWater extends Fragment{
     }
 
     WaterDataBaseAdapter waterDataBaseAdapter;
+    SessionManagement session;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,6 +42,8 @@ public class FWater extends Fragment{
         waterDataBaseAdapter = new WaterDataBaseAdapter(getActivity());
         waterDataBaseAdapter = waterDataBaseAdapter.open();
 
+        session = new SessionManagement(getActivity().getApplicationContext());
+
 //      identifying the button
         btnSubmitElec = (Button) rootView.findViewById(R.id.button_water_submit);
         btnSubmitElec.setOnClickListener(new View.OnClickListener() {
@@ -44,8 +52,10 @@ public class FWater extends Fragment{
 
 //              take username entry from login / sign up form via method in FProfile
 //                String currentUser = getSingleEntry();
-                                                    String username = getActivity().getIntent().getStringExtra("USERNAME_KEY");
+                                                    String username = session.getUsername();
 //                convert distance to integer
+                                                    String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+
                                                     int cost = 0;
                                                     try {
                                                         cost = Integer.parseInt(ETcost.getText().toString());
@@ -53,10 +63,11 @@ public class FWater extends Fragment{
                                                         System.out.println("Could not parse distance " + nfe);
                                                     }
                                                     // Save the Data in Database
-                                                    waterDataBaseAdapter.insertEntry(username, cost);
+                                                    waterDataBaseAdapter.insertEntry(username, date, cost);
                                                     Toast.makeText(getActivity().getApplicationContext(), "Data Saved", Toast.LENGTH_LONG).show();
 //                                              link back to input menu
                                                     Intent intent = new Intent(getActivity(), MainActivity.class);
+                                                    intent.putExtra("caller", "Input");
                                                     startActivity(intent);
                                                 }
                                             }

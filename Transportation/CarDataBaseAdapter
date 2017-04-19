@@ -7,6 +7,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.catalystreeapp.Main.MasterDataBaseHelper;
+
 public class CarDataBaseAdapter {
 
     private static String TAG = "CarDataBaseAdapter";
@@ -21,19 +23,16 @@ public class CarDataBaseAdapter {
     public static final String COLUMN_DISTANCE = "DISTANCE";
     public static final String COLUMN_TIME = "TIME";
 
-    // SQL Statement to create a new database.
-    static final String CREATE_TABLE_QUERY = "create table" + "CAR" +
-            "( " + "USERNAME text, DATE text, TYPE text, DISTANCE int, TIME int);";
     // Variable to hold the database instance
     public static SQLiteDatabase db;
     // Context of the application using the database.
     private final Context context;
     // Database open/upgrade helper
-    private CarDataBaseHelper dbHelper;
+    private MasterDataBaseHelper dbHelper;
 
     public CarDataBaseAdapter(Context _context) {
         context = _context;
-        dbHelper = new CarDataBaseHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
+        dbHelper = new MasterDataBaseHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     public CarDataBaseAdapter open() throws SQLException {
@@ -81,35 +80,23 @@ public class CarDataBaseAdapter {
 //        return type;
 //    }
 
-        public Cursor getCarEntry(String username) {
-        Cursor carcursor = db.query("CAR", null, " USERNAME=?", new String[]{username}, null, null, null);
-        if (carcursor.getCount() < 1) // UserName Not Exist
-        {
-            carcursor.close();
+    public Cursor getCarEntry(String username) {
+
+        Cursor carCursor = db.query(true, "CAR", new String[]{"date, time"} ,"USERNAME=?", new String[]{username}, null, null, null, "10");
+        if (carCursor.getCount() < 1) {
+            carCursor.close();
             Log.d(TAG, "getCarEntry: user does not exist");
         }
-        carcursor.moveToFirst();
-        int counter = 0;
-        while (counter < 7) {
-            String type = carcursor.getString(carcursor.getColumnIndex("DATE"));
-            Integer time = carcursor.getInt(carcursor.getColumnIndex("TIME"));
-            counter = counter + 1;
-            carcursor.moveToNext();
+        for (int i = 0; i < 7 && carCursor.moveToNext(); ++i) {
+            carCursor.moveToFirst();
+            String type = carCursor.getString(carCursor.getColumnIndex("DATE"));
+            Integer time = carCursor.getInt(carCursor.getColumnIndex("TIME"));
         }
-        carcursor.close();
-        return carcursor;
+
+        return carCursor;
     }
+
     public void close() {
         db.close();
     }
 }
-//    public void updateEntry(String username, String password, String email) {
-//        // Define the updated row content.
-//        ContentValues updatedValues = new ContentValues();
-//        // Assign values for each row.
-//        updatedValues.put("USERNAME", username);
-//        updatedValues.put("PASSWORD", password);
-//        updatedValues.put("Email", email);
-//
-//        String where = "USERNAME = ?";
-//        db.update("LOGIN", updatedValues, where, new String[]{username});

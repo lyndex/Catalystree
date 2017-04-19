@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <com.github.mikephil.charting.charts.LineChart
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/lineChart"
-        android:layout_above="@+id/b_pie">
+        android:id="@+id/linechart_money"
+        android:layout_alignLeft="@+id/tvEnergy"
+        android:layout_alignStart="@+id/tvEnergy"
+        android:layout_above="@+id/tvDate">
     </com.github.mikephil.charting.charts.LineChart>
 
     <Button
         android:id="@+id/b_pie"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pie Graph"
+        android:text="Energy Graph"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -38,6 +42,26 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/b_pie"
+        android:layout_centerHorizontal="true"
+        android:text="date(mm/dd/yy)" />
+
+    <TextView
+        android:id="@+id/tvEnergy"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:rotation="-90"
+        android:text="Money spent (CAD)"
+        android:layout_marginLeft="41dp"
+        android:layout_marginStart="41dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>

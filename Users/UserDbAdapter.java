@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.catalystreeapp.Main.MasterDataBaseHelper;
+
 public class UserDbAdapter {
     private static String TAG = "UserDataBaseAdapter";
     final String DATABASE_NAME = "catalystree.db";
@@ -18,21 +20,17 @@ public class UserDbAdapter {
     public static final String COLUMN_EMAIL = "EMAIL";
     public static final String COLUMN_PASSWORD = "PASSWORD";
 
-    // SQL Statement to create a new database.
-    static final String CREATE_TABLE_QUERY =
-            "create table " + "User" +"( "
-                    + "ID INTEGER PRIMARY KEY AUTOINCREMENT, USERNAME TEXT, EMAIL TEXT, PASSWORD TEXT);" ;
 
     // Variable to hold the database instance
     public static SQLiteDatabase db;
     // Context of the application using the database.
     private  Context context;
     // Database open/upgrade helper
-    private DataBaseHelper dbHelper;
+    private MasterDataBaseHelper dbHelper;
 
     public UserDbAdapter(Context _context) {
         context = _context;
-        dbHelper = new DataBaseHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
+        dbHelper = new MasterDataBaseHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     public UserDbAdapter open() throws SQLException {
@@ -55,21 +53,21 @@ public class UserDbAdapter {
         db.insert("User", null, newValues);
     }
 
-    public int deleteEntry(String UserName) {
-        //String id=String.valueOf(ID);
-        String where = "USERNAME=?";
-        int numberOFEntriesDeleted = db.delete("User", where, new String[]{UserName});
-        // Toast.makeText(context, "Number fo Entry Deleted Successfully : "+numberOFEntriesDeleted, Toast.LENGTH_LONG).show();
-        return numberOFEntriesDeleted;
-    }
+//    public int deleteEntry(String UserName) {
+//        //String id=String.valueOf(ID);
+//        String where = "USERNAME=?";
+//        int numberOFEntriesDeleted = db.delete("User", where, new String[]{UserName});
+//        // Toast.makeText(context, "Number fo Entry Deleted Successfully : "+numberOFEntriesDeleted, Toast.LENGTH_LONG).show();
+//        return numberOFEntriesDeleted;
+//    }
 
 //      get entry for the log in
         String getSingleEntry(String userName) {
         Cursor userCursor = db.query("User", null, " USERNAME=?", new String[]{userName}, null, null, null);
         if (userCursor.getCount() < 1) // UserName Not Exist
         {
-            userCursor.close();
-            return "NOT EXIST";
+//            userCursor.close();
+            return "NOOOOOOOOOOOOOOOOOOOOO";
         }
         userCursor.moveToFirst();
         String password = userCursor.getString(userCursor.getColumnIndex("PASSWORD"));

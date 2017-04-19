@@ -34,6 +34,7 @@ public class FInput extends Fragment {
 
         transportationButton.setOnClickListener(new View.OnClickListener() {
             @Override
+//            todo this is an inner class
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FTransportation.class);
                 startActivity(intent);
@@ -55,7 +56,6 @@ public class FInput extends Fragment {
                 startActivity(intent);
             }
         });
-
         return myView;
     }
 }

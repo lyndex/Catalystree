@@ -1,10 +1,12 @@
-package com.example.catalystreeapp;
+package com.example.catalystreeapp.Transportation;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.example.catalystreeapp.Main.MasterDataBaseHelper;
 
 public class TransitDataBaseAdapter {
 
@@ -14,22 +16,20 @@ public class TransitDataBaseAdapter {
     private static final String DATABASE_TABLE ="TRANSIT";
 
     public static final String COLUMN_USERNAME = "USERNAME";
+    public static final String COLUMN_DATE = "DATE";
     public static final String COLUMN_DISTANCE = "DISTANCE";
     public static final String COLUMN_TIME = "TIME";
 
-    // SQL Statement to create a new database.
-    static final String DATABASE_CREATE = "create table"+" TRANSIT" +
-            "( " + "USERNAME text, DISTANCE int, TIME int);";
     // Variable to hold the database instance
     public SQLiteDatabase db;
     // Context of the application using the database.
     private final Context context;
     // Database open/upgrade helper
-    private TransitDataBaseHelper dbHelper;
+    private MasterDataBaseHelper dbHelper;
 
     public TransitDataBaseAdapter(Context _context) {
         context = _context;
-        dbHelper = new TransitDataBaseHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
+        dbHelper = new MasterDataBaseHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     public TransitDataBaseAdapter open() throws SQLException {
@@ -45,10 +45,11 @@ public class TransitDataBaseAdapter {
         return db;
     }
 
-    public void insertEntry(String USERNAME, Integer distance, Integer time) {
+    public void insertEntry(String USERNAME, String date, Integer distance, Integer time) {
         ContentValues newValues = new ContentValues();
         // Assign values for each row.
         newValues.put("USERNAME", USERNAME);
+        newValues.put("DATE", date);
         newValues.put("DISTANCE", distance);
         newValues.put("TIME", time);
 

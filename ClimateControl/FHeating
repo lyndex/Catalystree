@@ -16,9 +16,13 @@ import android.widget.Toast;
 import com.example.catalystreeapp.Main.MainActivity;
 import com.example.catalystreeapp.R;
 import com.example.catalystreeapp.Transportation.CarDataBaseAdapter;
+import com.example.catalystreeapp.Users.SessionManagement;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public class FHeating extends Fragment implements AdapterView.OnItemSelectedListener {
@@ -27,6 +31,7 @@ public class FHeating extends Fragment implements AdapterView.OnItemSelectedList
     }
 
     HeatingDataBaseAdapter heatingDataBaseAdapter;
+    SessionManagement session;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,6 +46,8 @@ public class FHeating extends Fragment implements AdapterView.OnItemSelectedList
 //      create new car database
         heatingDataBaseAdapter = new HeatingDataBaseAdapter(getActivity());
         heatingDataBaseAdapter = heatingDataBaseAdapter.open();
+
+        session = new SessionManagement(getActivity().getApplicationContext());
 
         // Get References of Views
         heatingSpinner = (Spinner) rootView.findViewById(R.id.spinner_heating_type);
@@ -75,7 +82,9 @@ public class FHeating extends Fragment implements AdapterView.OnItemSelectedList
 
 //              take username entry from login / sign up form via method in FProfile
 //                String currentUser = getSingleEntry();
-                                                String username = getActivity().getIntent().getStringExtra("USERNAME_KEY");
+                                                String username = session.getUsername();
+
+                                                String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
 
                                                 String type = heatingSpinner.getSelectedItem().toString();
 
@@ -95,10 +104,11 @@ public class FHeating extends Fragment implements AdapterView.OnItemSelectedList
                                                 }
 
                                                 // Save the Data in Database
-                                                heatingDataBaseAdapter.insertEntry(username, type, distance, time);
+                                                heatingDataBaseAdapter.insertEntry(username, date, type, distance, time);
                                                 Toast.makeText(getActivity().getApplicationContext(), "Data Saved", Toast.LENGTH_LONG).show();
 //                                              link back to input menu
                                                 Intent intent = new Intent(getActivity(), MainActivity.class);
+                                                intent.putExtra("caller", "Input");
                                                 startActivity(intent);
                                             }
                                         }

@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.catalystreeapp.Main.MasterDataBaseHelper;
+
 public class WaterDataBaseAdapter {
 
     private static final String DATABASE_NAME = "catalystree.db";
@@ -14,21 +16,19 @@ public class WaterDataBaseAdapter {
     private static final String DATABASE_TABLE ="WATER";
 
     public static final String COLUMN_USERNAME = "USERNAME";
+    public static final String COLUMN_DATE = "DATE";
     public static final String COLUMN_TIME = "COST";
 
-    // SQL Statement to create a new database.
-    static final String DATABASE_CREATE = "create table"+" WATER" +
-            "( " + "USERNAME text, COST int);";
     // Variable to hold the database instance
     public SQLiteDatabase db;
     // Context of the application using the database.
     private final Context context;
     // Database open/upgrade helper
-    private WaterDataBaseHelper dbHelper;
+    private MasterDataBaseHelper dbHelper;
 
     public WaterDataBaseAdapter(Context _context) {
         context = _context;
-        dbHelper = new WaterDataBaseHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
+        dbHelper = new MasterDataBaseHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     public WaterDataBaseAdapter open() throws SQLException {
@@ -45,10 +45,11 @@ public class WaterDataBaseAdapter {
     }
 
 
-    public void insertEntry(String username, Integer cost) {
+    public void insertEntry(String username, String date, Integer cost) {
         ContentValues newValues = new ContentValues();
         // Assign values for each row.
         newValues.put("USERNAME", username);
+        newValues.put("DATE", date);
         newValues.put("COST", cost);
 
         // Insert the row into your table

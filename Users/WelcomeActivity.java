@@ -17,6 +17,7 @@ public class WelcomeActivity extends Activity
 {
     Button btnSignIn,btnSignUp;
     UserDbAdapter userDbAdapter;
+    SessionManagement session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -27,6 +28,8 @@ public class WelcomeActivity extends Activity
         // create a instance of SQLite Database
         userDbAdapter =new UserDbAdapter(this);
         userDbAdapter = userDbAdapter.open();
+
+        session = new SessionManagement(this);
 
         // Get The Reference Of Buttons
         btnSignIn=(Button)findViewById(R.id.buttonSignIN);
@@ -51,18 +54,17 @@ public class WelcomeActivity extends Activity
 
         // get the References of views
         final  EditText editTextUserName=(EditText)dialog.findViewById(R.id.editTextUserNameToLogin);
+        final  EditText editTextEmail=(EditText)dialog.findViewById(R.id.editTextEmail);
         final  EditText editTextPassword=(EditText)dialog.findViewById(R.id.editTextPasswordToLogin);
 
         Button btnSignIn=(Button)dialog.findViewById(R.id.buttonSignIn);
 
         // Set On ClickListener
         btnSignIn.setOnClickListener(new View.OnClickListener() {
-
-
-
             public void onClick(View v) {
                 // get The User name and Password
                 String userName=editTextUserName.getText().toString();
+                String email = editTextEmail.getText().toString();
                 String password=editTextPassword.getText().toString();
 
                 // fetch the Password form database for respective user name
@@ -71,11 +73,11 @@ public class WelcomeActivity extends Activity
                 // check if the Stored password matches with  Password entered by user
                 if(password.equals(storedPassword))
                 {
+                    session.createLoginSession(userName, email);
                     Toast.makeText(WelcomeActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                     Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
 
-                    intent.putExtra("USERNAME_KEY", userName);
                     intent.putExtra("caller", "Home");
                     startActivity(intent);
 

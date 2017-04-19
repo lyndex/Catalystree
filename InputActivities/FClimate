@@ -1,4 +1,4 @@
-package com.example.catalystreeapp.Level2Activity;
+package com.example.catalystreeapp.InputActivities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

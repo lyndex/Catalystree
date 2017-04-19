@@ -1,5 +1,6 @@
 package com.example.catalystreeapp.Main;
 
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -7,11 +8,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.catalystreeapp.MainFragments.FHome;
 import com.example.catalystreeapp.MainFragments.FInput;
@@ -19,6 +24,10 @@ import com.example.catalystreeapp.MainFragments.FProfile;
 import com.example.catalystreeapp.MainFragments.FSettings;
 import com.example.catalystreeapp.MainFragments.FUsageEnergyW;
 import com.example.catalystreeapp.R;
+import com.example.catalystreeapp.Users.AlertDialogManager;
+import com.example.catalystreeapp.Users.SessionManagement;
+
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -29,12 +38,25 @@ public class MainActivity extends AppCompatActivity{
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     android.support.v7.app.ActionBarDrawerToggle mDrawerToggle;
+    // Alert Dialog Manager
+    AlertDialogManager alert = new AlertDialogManager();
+    // Session Manager Class
+    SessionManagement session;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
          setContentView(R.layout.activity_main);
+
+
+        // Session class instance
+        session = new SessionManagement(getApplicationContext());
+//        displays if user is logged in
+//        Toast.makeText(getApplicationContext(), "User Login Status: " + session.isLoggedIn(), Toast.LENGTH_SHORT).show();
+//      check if user is logged in
+        session.checkLogin();
+
 
 //        set default displayed fragment
         String caller = getIntent().getStringExtra("caller");
@@ -49,30 +71,11 @@ public class MainActivity extends AppCompatActivity{
             tx.commit();
         }
 
+
         mTitle = mDrawerTitle = getTitle();
         mNavigationDrawerItemTitles= getResources().getStringArray(R.array.navigation_drawer_items_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-        String s = getIntent().getStringExtra("USERNAME_KEY");
-
-        Bundle profileextras = getIntent().getExtras();
-        if (profileextras != null) {
-            String value = profileextras.getString("USERNAME_KEY");
-            //The key argument here must match that used in the other activity
-        }
-        FProfile profile = new FProfile();
-        profile.setArguments(profileextras);
-
-//        todo doesnt work if two are attached
-        Bundle energyextras = getIntent().getExtras();
-        if (energyextras != null) {
-            String value = energyextras.getString("USERNAME_KEY");
-            //The key argument here must match that used in the other activity
-        }
-        FUsageEnergyW usageEnergyW = new FUsageEnergyW();
-        usageEnergyW.setArguments(energyextras);
-
 
         setupToolbar();
 
@@ -113,7 +116,6 @@ public class MainActivity extends AppCompatActivity{
                 break;
             case 1:
                 fragment = new FProfile();
-
                 break;
             case 2:
                 fragment = new FInput();
@@ -124,20 +126,13 @@ public class MainActivity extends AppCompatActivity{
             case 4:
                 fragment = new FSettings();
                 break;
-
             default:
                 break;
         }
 
         if (fragment != null) {
 
-//            supposed to fix the get intent in PFragment
-            FProfile frag = new FProfile();
-            frag.setArguments(getIntent().getExtras());
-
-            FUsageEnergyW frag1 = new FUsageEnergyW();
-            frag1.setArguments(getIntent().getExtras());
-
+            fragment.setArguments(getIntent().getExtras());
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();

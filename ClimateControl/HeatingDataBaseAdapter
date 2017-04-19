@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.catalystreeapp.Transportation.CarDataBaseHelper;
+import com.example.catalystreeapp.Main.MasterDataBaseHelper;
 
 public class HeatingDataBaseAdapter {
 
@@ -16,23 +16,22 @@ public class HeatingDataBaseAdapter {
     private static final String DATABASE_TABLE ="HEATING";
 
     public static final String COLUMN_USERNAME = "USERNAME";
+    public static final String COLUMN_DATE = "DATE";
     public static final String COLUMN_TYPE = "TYPE";
     public static final String COLUMN_DISTANCE = "TEMPERATURE";
     public static final String COLUMN_TIME = "TIME";
 
     // SQL Statement to create a new database.
-    static final String DATABASE_CREATE = "create table"+" CAR" +
-            "( " + "USERNAME text, TYPE text, TEMPERATURE int, TIME int);";
     // Variable to hold the database instance
     public SQLiteDatabase db;
     // Context of the application using the database.
     private final Context context;
     // Database open/upgrade helper
-    private HeatingDataBaseHelper dbHelper;
+    private MasterDataBaseHelper dbHelper;
 
     public HeatingDataBaseAdapter(Context _context) {
         context = _context;
-        dbHelper = new HeatingDataBaseHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
+        dbHelper = new MasterDataBaseHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     public HeatingDataBaseAdapter open() throws SQLException {
@@ -49,10 +48,11 @@ public class HeatingDataBaseAdapter {
     }
 
 
-    public void insertEntry(String username, String type, Integer temperature, Integer time) {
+    public void insertEntry(String username, String date, String type, Integer temperature, Integer time) {
         ContentValues newValues = new ContentValues();
         // Assign values for each row.
         newValues.put("USERNAME", username);
+        newValues.put("DATE", date);
         newValues.put("TYPE", type);
         newValues.put("TEMPERATURE", temperature);
         newValues.put("TIME", time);

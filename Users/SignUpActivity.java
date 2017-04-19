@@ -11,13 +11,13 @@ package com.example.catalystreeapp.Users;
         import com.example.catalystreeapp.Main.MainActivity;
         import com.example.catalystreeapp.R;
 
-
 public class SignUpActivity extends Activity
 {
     EditText editTextUserName,editTextEmail,editTextPassword,editTextConfirmPassword;
     Button btnCreateAccount;
-
+    SessionManagement session;
     UserDbAdapter userDbAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -58,12 +58,13 @@ public class SignUpActivity extends Activity
                 }
                 else
                 {
+                    session.createLoginSession(userName, email);
                     // Save the Data in Database
                     UserDbAdapter.insertEntry(userName, email, password);
                     Toast.makeText(getApplicationContext(), "Account Successfully Created ", Toast.LENGTH_LONG).show();
+
                     Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
 
-                    intent.putExtra("USERNAME_KEY", userName);
                     intent.putExtra("caller", "Home");
                     startActivity(intent);
                 }

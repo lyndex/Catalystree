@@ -1,6 +1,8 @@
 package com.example.catalystreeapp.Transportation;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.catalystreeapp.Main.MainActivity;
 import com.example.catalystreeapp.R;
+import com.example.catalystreeapp.Users.SessionManagement;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,6 +32,7 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
     }
 
     CarDataBaseAdapter carDataBaseAdapter;
+    SessionManagement session;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,6 +47,24 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
 //      create new car database
         carDataBaseAdapter = new CarDataBaseAdapter(getActivity());
         carDataBaseAdapter = carDataBaseAdapter.open();
+        SQLiteDatabase x = carDataBaseAdapter.getDatabaseInstance();
+
+        session = new SessionManagement(getActivity().getApplicationContext());
+
+//        display existing tables
+/*
+        Cursor hi = x.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+        hi.moveToFirst();
+        int f = hi.getCount();
+        String g = Integer.toString(f);
+        Toast.makeText(getActivity().getApplicationContext(), g, Toast.LENGTH_LONG).show();
+        while ( !hi.isAfterLast() ) {
+            String h = (hi.getString( hi.getColumnIndex("name")) );
+            hi.moveToNext();
+            Toast.makeText(getActivity().getApplicationContext(), h, Toast.LENGTH_LONG).show();
+        }
+*/
+
 
         // Get References of Views
         carSpinner = (Spinner) rootView.findViewById(R.id.spinner_car_type);
@@ -78,7 +100,7 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
 
 //              take username entry from login / sign up form via method in FProfile
 //                String currentUser = getSingleEntry();
-                                                String username = getActivity().getIntent().getStringExtra("USERNAME_KEY");
+                                                String username = session.getUsername();
 
                                                 String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
 
@@ -104,7 +126,7 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
                                                 Toast.makeText(getActivity().getApplicationContext(), "Data Saved", Toast.LENGTH_LONG).show();
 //                                              link back to input menu
                                                 Intent intent = new Intent(getActivity(), MainActivity.class);
-                                                intent.putExtra("USERNAME_KEY", username);
+
                                                 intent.putExtra("caller", "Input");
                                                 startActivity(intent);
 

@@ -32,11 +32,12 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import java.util.List;
 
 public class FUsageEnergyW extends Fragment {
 
@@ -65,13 +66,8 @@ public class FUsageEnergyW extends Fragment {
 // set parse color later
 
 //        work on data
-        LineData data = new LineData();
-        data.setValueTextColor(Color.WHITE);
         carDataBaseAdapter = new CarDataBaseAdapter(getActivity());
         carDataBaseAdapter = carDataBaseAdapter.open();
-
-//        set data to line chart
-        chart.setData(data);
 
 //        get legend object
         Legend l = chart.getLegend();
@@ -92,9 +88,6 @@ public class FUsageEnergyW extends Fragment {
         YAxis y12 = chart.getAxisRight();
         y12.setEnabled(false);
 
-
-
-
         //        passed username used to identify user
         session = new SessionManagement(getActivity().getApplicationContext());
         String currentUsername = session.getUsername();
@@ -109,24 +102,27 @@ public class FUsageEnergyW extends Fragment {
         int m;
         for (m = 0; m < count; m++) {
             carCursor.moveToFirst();
-            carCursor.moveToNext();
             date[m] = carCursor.getString(0);
             distance[m] = carCursor.getInt(1);
+            carCursor.moveToNext();
         }
         carCursor.close();
 
+        //todo how to convert integer array to entry array
+        ArrayList<String> xVals = new ArrayList<String>();
+        ArrayList<Entry> yVals = new ArrayList<Entry>();
+        List<Entry> distanceVals = new ArrayList<>();
 
-//        create array for y values
-        ArrayList<Entry> yVals = new ArrayList<>(Arrays.asList(bar_graph_values));
-        for(int i=0;i<bar_graph_values.length;i++)
-        {
-            BarEntry [] barentry = new BarEntry[bar_graph_values.length];
-            barentry[i] = new BarEntry(Float.valueOf(distance.get(i)),i);
+        for (int i = 0; i < distance.length; i++) {
+            Entry e = new Entry(i, Float.valueOf(distance[i]));
+            distanceVals.add(i, e);
         }
-
-//        creating dataset
-        LineDataSet set1 = new LineDataSet(yVals, "Energy Consumed(kJ)");
-        data = new LineData(set1);
+        LineDataSet distanceSet = new LineDataSet(distanceVals, "Distance");
+        List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        dataSets.add(distanceSet);
+        LineData data = new LineData(dataSets);
+        chart.setData(data);
+        chart.invalidate();
 
 //        formatting so that strings can be displayed on the x axis
         IAxisValueFormatter formatter = new IAxisValueFormatter() {
@@ -178,31 +174,7 @@ public class FUsageEnergyW extends Fragment {
                 startActivity(intent);
             }
         });
-//todo what is happening pls help
-//    private void setData(int count, float range) {
-//
-//        for (int i = 0; i < count; i++) {
-//
-//            float val = (float) distance;
-//            values.add(new Entry(i, val, getResources().getDrawable(R.drawable.star)));
-//        }
-//    }
-//}
         return myView;
-    }
-//todo how to convert integer array to entry array
-    private void setData() {
-        ArrayList<String> xVals = new ArrayList<String>();
-        ArrayList<Entry> yVals = new ArrayList<Entry>();
-
-        xVals = new ArrayList<String>(Arrays.asList(bar_graph_names));
-        for(int i=0; i < bar_graph_values.length; i++) {
-            Entry entry = new Entry(Float.valueOf(bar_graph_values[i]), i);
-            yVals.add(entry);
-        }
-        LineDataSet newSet = new LineDataSet(yVals, "DataSet");
-        LineData data = new LineData(newSet);
-        chart.setData(data);
     }
 }
 //method to add data

@@ -50,6 +50,7 @@ public class FUsageEnergyW extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context = getActivity();
         View myView = inflater.inflate(R.layout.fragment_usage_energy, container, false);
+//        set view for chart
         chart = (LineChart) myView.findViewById(R.id.linechart_energy);
 
 //        create linechart
@@ -65,16 +66,16 @@ public class FUsageEnergyW extends Fragment {
         chart.setBackgroundColor(Color.LTGRAY);
 // set parse color later
 
-//        work on data
+//      open car database
         carDataBaseAdapter = new CarDataBaseAdapter(getActivity());
         carDataBaseAdapter = carDataBaseAdapter.open();
 
 //        get legend object
         Legend l = chart.getLegend();
 
-//        customize legend
+//       customize legend
         l.setTextColor(Color.WHITE);
-
+//      customize chart
         XAxis xl = chart.getXAxis();
         xl.setTextColor(Color.WHITE);
         xl.setDrawGridLines(false);
@@ -94,6 +95,7 @@ public class FUsageEnergyW extends Fragment {
 
 //        convert cursor to array
         int count = 7;
+
         Cursor carCursor = carDataBaseAdapter.getCarEntry(currentUsername);
 
         final String[] date = new String[count];
@@ -108,9 +110,7 @@ public class FUsageEnergyW extends Fragment {
         }
         carCursor.close();
 
-        //todo how to convert integer array to entry array
-        ArrayList<String> xVals = new ArrayList<String>();
-        ArrayList<Entry> yVals = new ArrayList<Entry>();
+//        create lists for entries
         List<Entry> distanceVals = new ArrayList<>();
 
         for (int i = 0; i < distance.length; i++) {
@@ -118,8 +118,10 @@ public class FUsageEnergyW extends Fragment {
             distanceVals.add(i, e);
         }
         LineDataSet distanceSet = new LineDataSet(distanceVals, "Distance");
-        List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+//        set the list to a line data set
+        List<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(distanceSet);
+//        set the line data set to line data
         LineData data = new LineData(dataSets);
         chart.setData(data);
         chart.invalidate();

@@ -80,7 +80,8 @@ public class CarDataBaseAdapter {
 //        return type;
 //    }
 
-    public Cursor getCarEntry(String username) {
+/*
+    public Cursor getCarEntryTest(String username) {
 
         Cursor carCursor = db.query(true, "CAR", new String[]{"date, time"} ,"USERNAME=?", new String[]{username}, null, null, null, "10");
         if (carCursor.getCount() < 1) {
@@ -93,6 +94,24 @@ public class CarDataBaseAdapter {
             Integer time = carCursor.getInt(carCursor.getColumnIndex("TIME"));
         }
 
+        return carCursor;
+    }
+*/
+
+    public Cursor getCarEntry(String username) {
+
+        Cursor carCursor = db.query(true, "CAR", new String[]{"date, type, distance, time"} ,"USERNAME=?", new String[]{username}, null, null, null, "10");
+        if (carCursor.getCount() < 1) {
+            carCursor.close();
+            Log.d(TAG, "getCarEntry: user does not exist");
+        }
+        for (int i = 0; i < 7 && carCursor.moveToNext(); ++i) {
+            carCursor.moveToFirst();
+            String date = carCursor.getString(carCursor.getColumnIndex("DATE"));
+            String type = carCursor.getString(carCursor.getColumnIndex("TYPE"));
+            Integer distance = carCursor.getInt(carCursor.getColumnIndex("DISTANCE"));
+            Integer time = carCursor.getInt(carCursor.getColumnIndex("TIME"));
+        }
         return carCursor;
     }
 

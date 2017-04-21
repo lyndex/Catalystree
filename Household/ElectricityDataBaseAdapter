@@ -64,17 +64,18 @@ public class ElectricityDataBaseAdapter {
         return numberOFEntriesDeleted;
     }
 
-    public String getSinlgeEntry(String username) {
-        Cursor cursor = db.query("ELECTRICITY", null, " USERNAME=?", new String[]{username}, null, null, null);
-        if (cursor.getCount() < 1) // UserName Not Exist
-        {
-            cursor.close();
-            return "NOT EXIST";
+    public Cursor getElectricityEntry(String username) {
+
+        Cursor c = db.query(true, "ELECTRICITY", new String[]{"date, cost"} ,"USERNAME=?", new String[]{username}, null, null, null, "10");
+        if (c.getCount() < 1) {
+            c.close();
         }
-        cursor.moveToFirst();
-        String type = cursor.getString(cursor.getColumnIndex("TYPE"));
-        cursor.close();
-        return type;
+        for (int i = 0; i < 7 && c.moveToNext(); ++i) {
+            c.moveToFirst();
+            String date = c.getString(c.getColumnIndex("DATE"));
+            Integer cost = c.getInt(c.getColumnIndex("COST"));
+        }
+        return c;
     }
 
     public void updateEntry(String username, String password, String email) {

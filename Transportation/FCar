@@ -52,7 +52,6 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
         session = new SessionManagement(getActivity().getApplicationContext());
 
 //        display existing tables
-/*
         Cursor hi = x.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
         hi.moveToFirst();
         int f = hi.getCount();
@@ -63,7 +62,6 @@ public class FCar extends Fragment implements AdapterView.OnItemSelectedListener
             hi.moveToNext();
             Toast.makeText(getActivity().getApplicationContext(), h, Toast.LENGTH_LONG).show();
         }
-*/
 
 
         // Get References of Views

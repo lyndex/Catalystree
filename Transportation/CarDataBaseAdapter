@@ -58,6 +58,77 @@ public class CarDataBaseAdapter {
         db.insert("CAR", null, newValues);
         ///Toast.makeText(context, "Reminder Is Successfully Saved", Toast.LENGTH_LONG).show();
     }
+// get car entry (cursor with all columns from this user if the date entered is day"
+    public Cursor getCarEntryStandard(String username, String Day) {
+
+        Cursor carCursor = db.query(true, "CAR", new String[]{"date, type, distance, time"}, "USERNAME=?", new String[]{username}, null, null, null, "50");
+        if (carCursor.getCount() < 1) {
+            carCursor.close();
+            Log.d(TAG, "getCarEntry: user does not exist");
+        }
+        String standard = "Standard";
+        for (int i = 0; i < 50 && carCursor.moveToNext(); ++i) {
+            carCursor.moveToFirst();
+            String date = carCursor.getString(carCursor.getColumnIndex("DATE"));
+            if (date.equals(Day)) {
+                String type = carCursor.getString(carCursor.getColumnIndex("TYPE"));
+                if (type.equals(standard)) {
+                    Integer distance = carCursor.getInt(carCursor.getColumnIndex("DISTANCE"));
+                    Integer time = carCursor.getInt(carCursor.getColumnIndex("TIME"));
+                }
+            }
+        }
+        return carCursor;
+    }
+    public Cursor getCarEntryTruck(String username, String Day) {
+
+        Cursor carCursor = db.query(true, "CAR", new String[]{"date, type, distance, time"}, "USERNAME=?", new String[]{username}, null, null, null, "50");
+        if (carCursor.getCount() < 1) {
+            carCursor.close();
+            Log.d(TAG, "getCarEntry: user does not exist");
+        }
+        String truck = "Truck";
+        String electric = "Electric/Hybrid";
+        for (int i = 0; i < 50 && carCursor.moveToNext(); ++i) {
+            carCursor.moveToFirst();
+            String date = carCursor.getString(carCursor.getColumnIndex("DATE"));
+            if (date.equals(Day)) {
+                String type = carCursor.getString(carCursor.getColumnIndex("TYPE"));
+                if (type.equals(truck)) {
+                    Integer distance = carCursor.getInt(carCursor.getColumnIndex("DISTANCE"));
+                    Integer time = carCursor.getInt(carCursor.getColumnIndex("TIME"));
+                }
+            }
+        }
+        return carCursor;
+    }
+    public Cursor getCarEntryElectric(String username, String Day) {
+
+        Cursor carCursor = db.query(true, "CAR", new String[]{"date, type, distance, time"}, "USERNAME=?", new String[]{username}, null, null, null, "50");
+        if (carCursor.getCount() < 1) {
+            carCursor.close();
+            Log.d(TAG, "getCarEntry: user does not exist");
+        }
+        String electric = "Electric/Hybrid";
+        for (int i = 0; i < 50 && carCursor.moveToNext(); ++i) {
+            carCursor.moveToFirst();
+            String date = carCursor.getString(carCursor.getColumnIndex("DATE"));
+            if (date.equals(Day)) {
+                String type = carCursor.getString(carCursor.getColumnIndex("TYPE"));
+                if (type.equals(electric)) {
+                    Integer distance = carCursor.getInt(carCursor.getColumnIndex("DISTANCE"));
+                    Integer time = carCursor.getInt(carCursor.getColumnIndex("TIME"));
+                }
+            }
+        }
+        return carCursor;
+    }
+
+
+    public void close() {
+        db.close();
+    }
+}
 
 //    public int deleteEntry(String username) {
 //        //String id=String.valueOf(ID);
@@ -98,6 +169,7 @@ public class CarDataBaseAdapter {
     }
 */
 
+/*
     public Cursor getCarEntry(String username) {
 
         Cursor carCursor = db.query(true, "CAR", new String[]{"date, type, distance, time"} ,"USERNAME=?", new String[]{username}, null, null, null, "10");
@@ -114,8 +186,4 @@ public class CarDataBaseAdapter {
         }
         return carCursor;
     }
-
-    public void close() {
-        db.close();
-    }
-}
+*/

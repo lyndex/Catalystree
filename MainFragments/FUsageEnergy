@@ -103,9 +103,9 @@ public class FUsageEnergy extends Fragment {
         final Calendar cal = Calendar.getInstance();
         for (int i = 0; i < 7; i++) {
             String searchDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(date);
-            carStandardCursors[i] = carDataBaseAdapter.getCarEntry(currentUsername, searchDate, "Standard");
-            carTruckCursors[i] = carDataBaseAdapter.getCarEntry(currentUsername, searchDate, "Truck");
-            carElectricCursors[i] = carDataBaseAdapter.getCarEntry(currentUsername, searchDate, "Electric/Hybrid");
+            carStandardCursors[i] = carDataBaseAdapter.getCarEntry(currentUsername, searchDate, Standard);
+            carTruckCursors[i] = carDataBaseAdapter.getCarEntry(currentUsername, searchDate, Truck);
+            carElectricCursors[i] = carDataBaseAdapter.getCarEntry(currentUsername, searchDate, Electric);
             cal.add(Calendar.DATE, -1);
             date = cal.getTime();
         }

@@ -81,11 +81,14 @@ public class FUsageEnergy extends Fragment {
         conditioningDataBaseAdapter = new ConditioningDataBaseAdapter(context);
         conditioningDataBaseAdapter = conditioningDataBaseAdapter.open();
 
-
+//create cursor array of index 7 named carStandardCursors
         Cursor[] carStandardCursors = new Cursor[7];
+//        create integer array carStandard with index of 50
         Integer[] carStandard = new Integer[count];
+//        for every increment of +1 until 7
         for (int  i=0; i < 7; i++)
         {
+//            set ccursor as variable of each passing carStandardCursors
             Cursor ccursor =  carStandardCursors[i];
             carStandardTotal = CalculateCarStandard(ccursor);
             carStandard[count] = carStandardTotal;
@@ -238,11 +241,11 @@ public class FUsageEnergy extends Fragment {
     public int CalculateCarStandard(Cursor cursor) {
         Integer[] distanceS1 = new Integer[count];
         Integer[] timeS1 = new Integer[count];
-//        get all info from columns from today's date standard entry
+//        get all info from columns
         cursor.moveToFirst();
         for (m = 0; m < cursor.getCount(); m++) {
-            distanceS1[m] = cursor.getInt(2);
-            timeS1[m] = cursor.getInt(3);
+            distanceS1[m] = cursor.getInt(0);
+            timeS1[m] = cursor.getInt(1);
 //            String x = distance[m].toString();
 //            Toast.makeText(context.getApplicationContext(), x, Toast.LENGTH_SHORT).show();
             cursor.moveToNext();
@@ -271,8 +274,8 @@ public class FUsageEnergy extends Fragment {
         Integer[] timeS2 = new Integer[count];
         cursor.moveToFirst();
         for (m = 0; m < cursor.getCount(); m++) {
-            distanceS2[m] = cursor.getInt(2);
-            timeS2[m] = cursor.getInt(3);
+            distanceS2[m] = cursor.getInt(0);
+            timeS2[m] = cursor.getInt(1);
             cursor.moveToNext();
         }
         cursor.close();

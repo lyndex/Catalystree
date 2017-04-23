@@ -251,7 +251,6 @@ public class FUsageEnergy extends Fragment {
         int distancesum = 0;
         for (int adistanceS1 : distanceS1) {
             int temp = 5;
-//            todo SOMETHING WRONG HERE
             distancesum += temp;
         }
 /*

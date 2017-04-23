@@ -83,12 +83,12 @@ public class FUsageEnergy extends Fragment {
 
 
         Cursor[] carStandardCursors = new Cursor[7];
-        Integer[] carStandard = new Integer[0];
+        Integer[] carStandard = new Integer[count];
         for (int  i=0; i < 7; i++)
         {
             Cursor ccursor =  carStandardCursors[i];
             carStandardTotal = CalculateCarStandard(ccursor);
-            carStandard[0] = carStandardTotal;
+            carStandard[count] = carStandardTotal;
         }
         Cursor [] carTruckCursors = new Cursor[7];
         for (int  i=0; i < 7; i++)

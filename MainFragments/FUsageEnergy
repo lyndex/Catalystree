@@ -65,43 +65,26 @@ public class FUsageEnergy extends Fragment {
         chart = (LineChart) myView.findViewById(R.id.linechart_energy);
         session = new SessionManagement(getActivity().getApplicationContext());
         String currentUsername = session.getUsername();
-//        open all the databases
+
+        /*open the databases**/
         carDataBaseAdapter = new CarDataBaseAdapter(context);
         carDataBaseAdapter = carDataBaseAdapter.open();
-
         transitDataBaseAdapter = new TransitDataBaseAdapter(context);
         transitDataBaseAdapter = transitDataBaseAdapter.open();
-
         walkDataBaseAdapter = new WalkDataBaseAdapter(context);
         walkDataBaseAdapter = walkDataBaseAdapter.open();
-
         heatingDataBaseAdapter = new HeatingDataBaseAdapter(context);
         heatingDataBaseAdapter = heatingDataBaseAdapter.open();
-
         conditioningDataBaseAdapter = new ConditioningDataBaseAdapter(context);
         conditioningDataBaseAdapter = conditioningDataBaseAdapter.open();
 
-//create cursor array of index 7 named carStandardCursors
+        /*list of cursor arrays and integer sum arrays**/
         Cursor[] carStandardCursors = new Cursor[7];
-//        create integer array carStandard with index of 50
         Integer[] carStandard = new Integer[count];
-//        for every increment of +1 until 7
-        for (int  i=0; i < 7; i++)
-        {
-//            set ccursor as variable of each passing carStandardCursors
-            Cursor ccursor =  carStandardCursors[i];
-            carStandardTotal = CalculateCarStandard(ccursor);
-            carStandard[count] = carStandardTotal;
-        }
-        Cursor [] carTruckCursors = new Cursor[7];
-        for (int  i=0; i < 7; i++)
-        {
-            Cursor ccursor = carTruckCursors[i];
-            carTruckTotal = CalculateCarTruck(ccursor);
-        }
-        Cursor [] carElectricCursors = new Cursor[7];
+        Cursor[] carTruckCursors = new Cursor[7];
+        Cursor[] carElectricCursors = new Cursor[7];
 
-        //        get dates
+        /*getting get data from data bases and populate cursor arrays**/
         Date date = new Date();
         final Calendar cal = Calendar.getInstance();
         for (int i = 0; i < 7; i++) {
@@ -113,9 +96,27 @@ public class FUsageEnergy extends Fragment {
             date = cal.getTime();
         }
 
+/*
+        */
+/*passing each cursor from each array through math method*//*
+
+        for (int  i=0; i < 7; i++)
+        {
+            Cursor ccursor =  carStandardCursors[i];
+            carStandardTotal = CalculateCarStandard(ccursor);
+            carStandard[count] = carStandardTotal;
+        }
+        for (int  i=0; i < 7; i++)
+        {
+            Cursor ccursor = carTruckCursors[i];
+            carTruckTotal = CalculateCarTruck(ccursor);
+        }
+
         int imdying = Calculate();
         Toast.makeText(context, imdying, Toast.LENGTH_SHORT).show();
+*/
 
+        /*LINECHART STUFF*/
 /*
 //        create line chart
 //        customize line chart
@@ -177,7 +178,6 @@ public class FUsageEnergy extends Fragment {
         chart.invalidate();
 
 */
-//todo thingy
 /*
         Integer x = CalculateFridayCarStandard();
         String sdfjoiag = x.toString();
@@ -204,40 +204,39 @@ public class FUsageEnergy extends Fragment {
         chart.invalidate();
 */
 
-//      button to money chart
-            Button b_pie = (Button) myView.findViewById(R.id.b_money);
-            b_pie.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Fragment frag = new FUsageCost();
-                    frag.setArguments(getActivity().getIntent().getExtras());
-                    FragmentManager fragmentManager = getFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.content_frame, frag).commit();
-                }
-            });
-//      button to go home
-            Button b_home = (Button) myView.findViewById(R.id.b_home);
-            b_home.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Fragment frag = new FHome();
-                    frag.setArguments(getActivity().getIntent().getExtras());
-                    FragmentManager fragmentManager = getFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.content_frame, frag).commit();
-                }
-            });
-//        button for tips
-            Button b_tips = (Button) myView.findViewById(R.id.b_tips);
-            b_tips.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_VIEW);
-                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                    intent.setData(Uri.parse("https://catalystree.wordpress.com/"));
-                    startActivity(intent);
-                }
-            });
+        /*buttons*/
+        Button b_pie = (Button) myView.findViewById(R.id.b_money);
+        b_pie.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Fragment frag = new FUsageCost();
+                frag.setArguments(getActivity().getIntent().getExtras());
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, frag).commit();
+            }
+        });
+        Button b_home = (Button) myView.findViewById(R.id.b_home);
+        b_home.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Fragment frag = new FHome();
+                frag.setArguments(getActivity().getIntent().getExtras());
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, frag).commit();
+            }
+        });
+        Button b_tips = (Button) myView.findViewById(R.id.b_tips);
+        b_tips.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                intent.setData(Uri.parse("https://catalystree.wordpress.com/"));
+                startActivity(intent);
+            }
+        });
 
-            return myView;
-        }
+        return myView;
+    }
+
     public int CalculateCarStandard(Cursor cursor) {
         Integer[] distanceS1 = new Integer[count];
         Integer[] timeS1 = new Integer[count];
@@ -246,22 +245,20 @@ public class FUsageEnergy extends Fragment {
         for (m = 0; m < cursor.getCount(); m++) {
             distanceS1[m] = cursor.getInt(0);
             timeS1[m] = cursor.getInt(1);
-//            String x = distance[m].toString();
-//            Toast.makeText(context.getApplicationContext(), x, Toast.LENGTH_SHORT).show();
+            String x = distanceS1[0].toString();
+            Toast.makeText(context.getApplicationContext(), x, Toast.LENGTH_SHORT).show();
             cursor.moveToNext();
         }
+        return 0;
+    }
+}
+
+/*
         cursor.close();
         int distancesum = 0;
-        for (int adistanceS1 : distanceS1) {
-            int temp = 5;
-            distancesum += temp;
-        }
-/*
-        Integer h = distanceS1[0];
-        String a = h.toString();
-        Toast.makeText(context, a, Toast.LENGTH_SHORT).show();
-        return 0;
-*/
+        for (int p : distanceS1)
+            distancesum += p;
+
         int timesum = 0;
         for (Integer atimeS1 : timeS1) {
             timesum += atimeS1;
@@ -292,10 +289,13 @@ public class FUsageEnergy extends Fragment {
     public int Calculate() {
         return carStandardTotal + carTruckTotal;
     }
+*/
 /*
     public int CalculateThursdayEnergy() {
         return CalculateThursdayCarStandard() + CalculateThursdayTrans();
-*/
+*//*
+
     }
 //    }
 
+*/

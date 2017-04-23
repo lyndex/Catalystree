@@ -52,7 +52,8 @@ public class FUsageEnergy extends Fragment {
     int standard = 3;
     int truck = 4;
     int electric = 2;
-    int carStandardTotal, carTruckTotal;
+    int carStandardTotal, carTruckTotal, carElectricTotal;
+    Integer[] carStandard, carTruck, carElectric;
     Context context;
     SessionManagement session;
 
@@ -80,9 +81,11 @@ public class FUsageEnergy extends Fragment {
 
         /*list of cursor arrays and integer sum arrays**/
         Cursor[] carStandardCursors = new Cursor[7];
-        Integer[] carStandard = new Integer[count];
+        carStandard = new Integer[count];
         Cursor[] carTruckCursors = new Cursor[7];
+        carTruck = new Integer[count];
         Cursor[] carElectricCursors = new Cursor[7];
+        carElectric = new Integer[count];
 
         /*getting get data from data bases and populate cursor arrays**/
         Date date = new Date();
@@ -97,29 +100,26 @@ public class FUsageEnergy extends Fragment {
         }
 
 /*
-        */
-/*passing each cursor from each array through math method*//*
+passing each cursor from each array through math method
+*/
 
-        for (int  i=0; i < 7; i++)
-        {
-            Cursor ccursor =  carStandardCursors[i];
+        for (int i = 0; i < 7; i++) {
+            Cursor ccursor = carStandardCursors[i];
             carStandardTotal = CalculateCarStandard(ccursor);
             carStandard[count] = carStandardTotal;
         }
-        for (int  i=0; i < 7; i++)
-        {
+        for (int i = 0; i < 7; i++) {
             Cursor ccursor = carTruckCursors[i];
             carTruckTotal = CalculateCarTruck(ccursor);
+            carTruck[count] = carTruckTotal;
+        }
+        for (int i = 0; i < 7; i++) {
+            Cursor ccursor = carTruckCursors[i];
+            carElectricTotal = CalculateCarElectric(ccursor);
+            carElectric[count] = carElectricTotal;
         }
 
-        int imdying = Calculate();
-        Toast.makeText(context, imdying, Toast.LENGTH_SHORT).show();
-*/
-
         /*LINECHART STUFF*/
-/*
-//        create line chart
-//        customize line chart
             chart.setNoDataText("No Data yet");
             chart.setHighlightPerTapEnabled(true);
             chart.setTouchEnabled(true);
@@ -127,14 +127,9 @@ public class FUsageEnergy extends Fragment {
             chart.setScaleEnabled(true);
             chart.setDrawGridBackground(false);
             chart.setPinchZoom(true);
-// set parse color later
 
-//        get legend object
-            Legend l = chart.getLegend();
-
-//       customize legend
-            l.setTextColor(Color.WHITE);
-//      customize chart
+         Legend l = chart.getLegend();
+         l.setTextColor(Color.WHITE);
             XAxis xl = chart.getXAxis();
             xl.setTextColor(Color.WHITE);
             xl.setDrawGridLines(false);
@@ -142,22 +137,14 @@ public class FUsageEnergy extends Fragment {
 
             YAxis yl = chart.getAxisLeft();
             yl.setTextColor(Color.WHITE);
-//        yl.setAxisMaximum(120f);
             yl.setDrawGridLines(true);
 
             YAxis y12 = chart.getAxisRight();
             y12.setEnabled(false);
-*/
 
-/*
-        Integer h = CalculateFridayCarStandard();
-//        convert cursor to array
-            int FridayEnergy = CalculateFridayEnergy();
-            int ThursdayEnergy = CalculateThursdayEnergy();
-
+/* SETTING DATA*/
         Integer[] Energy;
-        Energy = new Integer[]{ThursdayEnergy, FridayEnergy};
-
+        Energy = CalculateFinalEnergyies();
 
 //        create lists for entries
         List<Entry> FinalVals = new ArrayList<>();
@@ -177,7 +164,6 @@ public class FUsageEnergy extends Fragment {
         chart.setData(data);
         chart.invalidate();
 
-*/
 /*
         Integer x = CalculateFridayCarStandard();
         String sdfjoiag = x.toString();
@@ -249,19 +235,14 @@ public class FUsageEnergy extends Fragment {
             Toast.makeText(context.getApplicationContext(), x, Toast.LENGTH_SHORT).show();
             cursor.moveToNext();
         }
-        return 0;
-    }
-}
-
-/*
         cursor.close();
         int distancesum = 0;
-        for (int p : distanceS1)
-            distancesum += p;
+        for (int d : distanceS1)
+            distancesum += d;
 
         int timesum = 0;
-        for (Integer atimeS1 : timeS1) {
-            timesum += atimeS1;
+        for (int t : timeS1) {
+            timesum += t;
         }
         return distancesum * timesum * standard;
     }
@@ -286,16 +267,32 @@ public class FUsageEnergy extends Fragment {
         }
         return distancesum * timesum * truck;
     }
-    public int Calculate() {
-        return carStandardTotal + carTruckTotal;
+    public int CalculateCarElectric(Cursor cursor) {
+        Integer[] distanceS2 = new Integer[count];
+        Integer[] timeS2 = new Integer[count];
+        cursor.moveToFirst();
+        for (m = 0; m < cursor.getCount(); m++) {
+            distanceS2[m] = cursor.getInt(0);
+            timeS2[m] = cursor.getInt(1);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        int distancesum = 0;
+        for (Integer adistanceS2 : distanceS2) {
+            distancesum += adistanceS2;
+        }
+        int timesum = 0;
+        for (Integer atimeS2 : timeS2) {
+            timesum += atimeS2;
+        }
+        return distancesum * timesum * electric;
     }
-*/
-/*
-    public int CalculateThursdayEnergy() {
-        return CalculateThursdayCarStandard() + CalculateThursdayTrans();
-*//*
 
+    public Integer[] CalculateFinalEnergyies() {
+        Integer[] finalValues = new Integer[7];
+        for (m = 0; m < 7; m++) {
+            finalValues[m] = carStandard[m] + carTruck[m] + carElectric[m];
+        }
+        return finalValues;
     }
-//    }
-
-*/
+}

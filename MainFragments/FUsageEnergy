@@ -1,0 +1,299 @@
+package com.example.catalystreeapp.MainFragments;
+
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
+
+import com.example.catalystreeapp.ClimateControl.ConditioningDataBaseAdapter;
+import com.example.catalystreeapp.ClimateControl.HeatingDataBaseAdapter;
+import com.example.catalystreeapp.R;
+import com.example.catalystreeapp.Transportation.CarDataBaseAdapter;
+import com.example.catalystreeapp.Transportation.TransitDataBaseAdapter;
+import com.example.catalystreeapp.Transportation.WalkDataBaseAdapter;
+import com.example.catalystreeapp.Users.SessionManagement;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+public class FUsageEnergy extends Fragment {
+
+    LineChart chart;
+    CarDataBaseAdapter carDataBaseAdapter;
+    TransitDataBaseAdapter transitDataBaseAdapter;
+    WalkDataBaseAdapter walkDataBaseAdapter;
+    HeatingDataBaseAdapter heatingDataBaseAdapter;
+    ConditioningDataBaseAdapter conditioningDataBaseAdapter;
+
+    String Standard = "Standard", Truck = "Truck", Electric = "Electric/Hybrid";
+    int count = 50;
+    int m;
+    int standard = 3;
+    int truck = 4;
+    int electric = 2;
+    int carStandardTotal, carTruckTotal;
+    Context context;
+    SessionManagement session;
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        context = getActivity();
+        View myView = inflater.inflate(R.layout.fragment_usage_energy, container, false);
+//        set view for chart
+        chart = (LineChart) myView.findViewById(R.id.linechart_energy);
+        session = new SessionManagement(getActivity().getApplicationContext());
+        String currentUsername = session.getUsername();
+//        open all the databases
+        carDataBaseAdapter = new CarDataBaseAdapter(context);
+        carDataBaseAdapter = carDataBaseAdapter.open();
+
+        transitDataBaseAdapter = new TransitDataBaseAdapter(context);
+        transitDataBaseAdapter = transitDataBaseAdapter.open();
+
+        walkDataBaseAdapter = new WalkDataBaseAdapter(context);
+        walkDataBaseAdapter = walkDataBaseAdapter.open();
+
+        heatingDataBaseAdapter = new HeatingDataBaseAdapter(context);
+        heatingDataBaseAdapter = heatingDataBaseAdapter.open();
+
+        conditioningDataBaseAdapter = new ConditioningDataBaseAdapter(context);
+        conditioningDataBaseAdapter = conditioningDataBaseAdapter.open();
+
+
+        Cursor[] carStandardCursors = new Cursor[7];
+        Integer[] carStandard = new Integer[0];
+        for (int  i=0; i < 7; i++)
+        {
+            Cursor ccursor =  carStandardCursors[i];
+            carStandardTotal = CalculateCarStandard(ccursor);
+            carStandard[0] = carStandardTotal;
+        }
+        Cursor [] carTruckCursors = new Cursor[7];
+        for (int  i=0; i < 7; i++)
+        {
+            Cursor ccursor = carTruckCursors[i];
+            carTruckTotal = CalculateCarTruck(ccursor);
+        }
+        Cursor [] carElectricCursors = new Cursor[7];
+
+        //        get dates
+        Date date = new Date();
+        final Calendar cal = Calendar.getInstance();
+        for (int i = 0; i < 7; i++) {
+            String searchDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(date);
+            carStandardCursors[i] = carDataBaseAdapter.getCarEntry(currentUsername, searchDate, "Standard");
+            carTruckCursors[i] = carDataBaseAdapter.getCarEntry(currentUsername, searchDate, "Truck");
+            carElectricCursors[i] = carDataBaseAdapter.getCarEntry(currentUsername, searchDate, "Electric/Hybrid");
+            cal.add(Calendar.DATE, -1);
+            date = cal.getTime();
+        }
+
+        int imdying = Calculate();
+        Toast.makeText(context, imdying, Toast.LENGTH_SHORT).show();
+
+/*
+//        create line chart
+//        customize line chart
+            chart.setNoDataText("No Data yet");
+            chart.setHighlightPerTapEnabled(true);
+            chart.setTouchEnabled(true);
+            chart.setDragEnabled(true);
+            chart.setScaleEnabled(true);
+            chart.setDrawGridBackground(false);
+            chart.setPinchZoom(true);
+// set parse color later
+
+//        get legend object
+            Legend l = chart.getLegend();
+
+//       customize legend
+            l.setTextColor(Color.WHITE);
+//      customize chart
+            XAxis xl = chart.getXAxis();
+            xl.setTextColor(Color.WHITE);
+            xl.setDrawGridLines(false);
+            xl.setAvoidFirstLastClipping(true);
+
+            YAxis yl = chart.getAxisLeft();
+            yl.setTextColor(Color.WHITE);
+//        yl.setAxisMaximum(120f);
+            yl.setDrawGridLines(true);
+
+            YAxis y12 = chart.getAxisRight();
+            y12.setEnabled(false);
+*/
+
+/*
+        Integer h = CalculateFridayCarStandard();
+//        convert cursor to array
+            int FridayEnergy = CalculateFridayEnergy();
+            int ThursdayEnergy = CalculateThursdayEnergy();
+
+        Integer[] Energy;
+        Energy = new Integer[]{ThursdayEnergy, FridayEnergy};
+
+
+//        create lists for entries
+        List<Entry> FinalVals = new ArrayList<>();
+
+        for (int i = 0; i < Energy.length; i++) {
+            Entry e = new Entry(i, Float.valueOf(Energy[i]));
+            FinalVals.add(i, e);
+//            String k = e.toString();
+//            Toast.makeText(context.getApplicationContext(), k, Toast.LENGTH_SHORT).show();
+        }
+        LineDataSet distanceSet = new LineDataSet(FinalVals, "Energy");
+//        set the list to a line data set
+        List<ILineDataSet> dataSets = new ArrayList<>();
+        dataSets.add(distanceSet);
+//        set the line data set to line data
+        LineData data = new LineData(dataSets);
+        chart.setData(data);
+        chart.invalidate();
+
+*/
+//todo thingy
+/*
+        Integer x = CalculateFridayCarStandard();
+        String sdfjoiag = x.toString();
+        Toast.makeText(context, sdfjoiag, Toast.LENGTH_LONG).show();
+*/
+/*
+//        formatting so that strings can be displayed on the x axis
+        IAxisValueFormatter formatter = new IAxisValueFormatter() {
+
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                return date[(int) value];
+            }
+
+            // we don't draw numbers, so no decimal digits needed
+            public int getDecimalDigits() {
+                return 0;
+            }
+        };
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setGranularity(1f); // minimum axis-step (interval) is 1
+        xAxis.setValueFormatter(formatter);
+        chart.setData(data);
+        chart.invalidate();
+*/
+
+//      button to money chart
+            Button b_pie = (Button) myView.findViewById(R.id.b_money);
+            b_pie.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Fragment frag = new FUsageCost();
+                    frag.setArguments(getActivity().getIntent().getExtras());
+                    FragmentManager fragmentManager = getFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.content_frame, frag).commit();
+                }
+            });
+//      button to go home
+            Button b_home = (Button) myView.findViewById(R.id.b_home);
+            b_home.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Fragment frag = new FHome();
+                    frag.setArguments(getActivity().getIntent().getExtras());
+                    FragmentManager fragmentManager = getFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.content_frame, frag).commit();
+                }
+            });
+//        button for tips
+            Button b_tips = (Button) myView.findViewById(R.id.b_tips);
+            b_tips.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                    intent.setData(Uri.parse("https://catalystree.wordpress.com/"));
+                    startActivity(intent);
+                }
+            });
+
+            return myView;
+        }
+    public int CalculateCarStandard(Cursor cursor) {
+        Integer[] distanceS1 = new Integer[count];
+        Integer[] timeS1 = new Integer[count];
+//        get all info from columns from today's date standard entry
+        cursor.moveToFirst();
+        for (m = 0; m < cursor.getCount(); m++) {
+            distanceS1[m] = cursor.getInt(2);
+            timeS1[m] = cursor.getInt(3);
+//            String x = distance[m].toString();
+//            Toast.makeText(context.getApplicationContext(), x, Toast.LENGTH_SHORT).show();
+            cursor.moveToNext();
+        }
+        cursor.close();
+        int distancesum = 0;
+        for (int adistanceS1 : distanceS1) {
+            int temp = 5;
+//            todo SOMETHING WRONG HERE
+            distancesum += temp;
+        }
+/*
+        Integer h = distanceS1[0];
+        String a = h.toString();
+        Toast.makeText(context, a, Toast.LENGTH_SHORT).show();
+        return 0;
+*/
+        int timesum = 0;
+        for (Integer atimeS1 : timeS1) {
+            timesum += atimeS1;
+        }
+        return distancesum * timesum * standard;
+    }
+
+    public int CalculateCarTruck(Cursor cursor) {
+        Integer[] distanceS2 = new Integer[count];
+        Integer[] timeS2 = new Integer[count];
+        cursor.moveToFirst();
+        for (m = 0; m < cursor.getCount(); m++) {
+            distanceS2[m] = cursor.getInt(2);
+            timeS2[m] = cursor.getInt(3);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        int distancesum = 0;
+        for (Integer adistanceS2 : distanceS2) {
+            distancesum += adistanceS2;
+        }
+        int timesum = 0;
+        for (Integer atimeS2 : timeS2) {
+            timesum += atimeS2;
+        }
+        return distancesum * timesum * truck;
+    }
+    public int Calculate() {
+        return carStandardTotal + carTruckTotal;
+    }
+/*
+    public int CalculateThursdayEnergy() {
+        return CalculateThursdayCarStandard() + CalculateThursdayTrans();
+*/
+    }
+//    }
+

@@ -22,12 +22,14 @@ import com.example.catalystreeapp.Transportation.TransitDataBaseAdapter;
 import com.example.catalystreeapp.Transportation.WalkDataBaseAdapter;
 import com.example.catalystreeapp.Users.SessionManagement;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.text.DateFormat;
@@ -47,13 +49,13 @@ public class FUsageEnergy extends Fragment {
     ConditioningDataBaseAdapter conditioningDataBaseAdapter;
 
     String Standard = "Standard", Truck = "Truck", Electric = "Electric/Hybrid";
-    int count = 50;
+    int dex = 49, size = 50;
     int m;
     int standard = 3;
     int truck = 4;
     int electric = 2;
     int carStandardTotal, carTruckTotal, carElectricTotal;
-    Integer[] carStandard, carTruck, carElectric;
+    int[] carStandard, carTruck, carElectric;
     Context context;
     SessionManagement session;
 
@@ -81,11 +83,11 @@ public class FUsageEnergy extends Fragment {
 
         /*list of cursor arrays and integer sum arrays**/
         Cursor[] carStandardCursors = new Cursor[7];
-        carStandard = new Integer[count];
+        carStandard = new int[size];
         Cursor[] carTruckCursors = new Cursor[7];
-        carTruck = new Integer[count];
+        carTruck = new int[size];
         Cursor[] carElectricCursors = new Cursor[7];
-        carElectric = new Integer[count];
+        carElectric = new int[size];
 
         /*getting get data from data bases and populate cursor arrays**/
         Date date = new Date();
@@ -102,55 +104,36 @@ public class FUsageEnergy extends Fragment {
 /*
 passing each cursor from each array through math method
 */
-
         for (int i = 0; i < 7; i++) {
             Cursor ccursor = carStandardCursors[i];
             carStandardTotal = CalculateCarStandard(ccursor);
-            carStandard[count] = carStandardTotal;
+            carStandard[dex] = carStandardTotal;
         }
         for (int i = 0; i < 7; i++) {
             Cursor ccursor = carTruckCursors[i];
             carTruckTotal = CalculateCarTruck(ccursor);
-            carTruck[count] = carTruckTotal;
+            carTruck[dex] = carTruckTotal;
         }
         for (int i = 0; i < 7; i++) {
-            Cursor ccursor = carTruckCursors[i];
+            Cursor ccursor = carElectricCursors[i];
             carElectricTotal = CalculateCarElectric(ccursor);
-            carElectric[count] = carElectricTotal;
+            carElectric[dex] = carElectricTotal;
         }
 
-        /*LINECHART STUFF*/
-            chart.setNoDataText("No Data yet");
-            chart.setHighlightPerTapEnabled(true);
-            chart.setTouchEnabled(true);
-            chart.setDragEnabled(true);
-            chart.setScaleEnabled(true);
-            chart.setDrawGridBackground(false);
-            chart.setPinchZoom(true);
+//LINECHART STUFF
 
-         Legend l = chart.getLegend();
-         l.setTextColor(Color.WHITE);
-            XAxis xl = chart.getXAxis();
-            xl.setTextColor(Color.WHITE);
-            xl.setDrawGridLines(false);
-            xl.setAvoidFirstLastClipping(true);
+        chart.setNoDataText("No Data yet");
 
-            YAxis yl = chart.getAxisLeft();
-            yl.setTextColor(Color.WHITE);
-            yl.setDrawGridLines(true);
+// SETTING DATA
 
-            YAxis y12 = chart.getAxisRight();
-            y12.setEnabled(false);
-
-/* SETTING DATA*/
-        Integer[] Energy;
+        int[] Energy;
         Energy = CalculateFinalEnergyies();
 
 //        create lists for entries
         List<Entry> FinalVals = new ArrayList<>();
 
         for (int i = 0; i < Energy.length; i++) {
-            Entry e = new Entry(i, Float.valueOf(Energy[i]));
+            Entry e = new Entry(i, (float) Energy[i]);
             FinalVals.add(i, e);
 //            String k = e.toString();
 //            Toast.makeText(context.getApplicationContext(), k, Toast.LENGTH_SHORT).show();
@@ -165,12 +148,7 @@ passing each cursor from each array through math method
         chart.invalidate();
 
 /*
-        Integer x = CalculateFridayCarStandard();
-        String sdfjoiag = x.toString();
-        Toast.makeText(context, sdfjoiag, Toast.LENGTH_LONG).show();
-*/
-/*
-//        formatting so that strings can be displayed on the x axis
+// X AXIS FORMATTING
         IAxisValueFormatter formatter = new IAxisValueFormatter() {
 
             @Override
@@ -190,7 +168,8 @@ passing each cursor from each array through math method
         chart.invalidate();
 */
 
-        /*buttons*/
+//buttons
+
         Button b_pie = (Button) myView.findViewById(R.id.b_money);
         b_pie.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -224,15 +203,14 @@ passing each cursor from each array through math method
     }
 
     public int CalculateCarStandard(Cursor cursor) {
-        Integer[] distanceS1 = new Integer[count];
-        Integer[] timeS1 = new Integer[count];
+        int[] distanceS1 = new int[size];
+        int[] timeS1 = new int[size];
 //        get all info from columns
         cursor.moveToFirst();
         for (m = 0; m < cursor.getCount(); m++) {
             distanceS1[m] = cursor.getInt(0);
             timeS1[m] = cursor.getInt(1);
-            String x = distanceS1[0].toString();
-            Toast.makeText(context.getApplicationContext(), x, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context.getApplicationContext(), "hi", Toast.LENGTH_SHORT).show();
             cursor.moveToNext();
         }
         cursor.close();
@@ -248,8 +226,8 @@ passing each cursor from each array through math method
     }
 
     public int CalculateCarTruck(Cursor cursor) {
-        Integer[] distanceS2 = new Integer[count];
-        Integer[] timeS2 = new Integer[count];
+        int[] distanceS2 = new int[size];
+        int[] timeS2 = new int[size];
         cursor.moveToFirst();
         for (m = 0; m < cursor.getCount(); m++) {
             distanceS2[m] = cursor.getInt(0);
@@ -258,7 +236,7 @@ passing each cursor from each array through math method
         }
         cursor.close();
         int distancesum = 0;
-        for (Integer adistanceS2 : distanceS2) {
+        for (int adistanceS2 : distanceS2) {
             distancesum += adistanceS2;
         }
         int timesum = 0;
@@ -268,8 +246,8 @@ passing each cursor from each array through math method
         return distancesum * timesum * truck;
     }
     public int CalculateCarElectric(Cursor cursor) {
-        Integer[] distanceS2 = new Integer[count];
-        Integer[] timeS2 = new Integer[count];
+        int[] distanceS2 = new int[size];
+        int[] timeS2 = new int[size];
         cursor.moveToFirst();
         for (m = 0; m < cursor.getCount(); m++) {
             distanceS2[m] = cursor.getInt(0);
@@ -278,21 +256,22 @@ passing each cursor from each array through math method
         }
         cursor.close();
         int distancesum = 0;
-        for (Integer adistanceS2 : distanceS2) {
+        for (int adistanceS2 : distanceS2) {
             distancesum += adistanceS2;
         }
         int timesum = 0;
-        for (Integer atimeS2 : timeS2) {
+        for (int atimeS2 : timeS2) {
             timesum += atimeS2;
         }
         return distancesum * timesum * electric;
     }
 
-    public Integer[] CalculateFinalEnergyies() {
-        Integer[] finalValues = new Integer[7];
+    public int[] CalculateFinalEnergyies() {
+        int[] finalValues = new int[7];
         for (m = 0; m < 7; m++) {
             finalValues[m] = carStandard[m] + carTruck[m] + carElectric[m];
         }
         return finalValues;
     }
 }
+

@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class FUsageEnergy extends Fragment {
 
@@ -91,16 +92,17 @@ public class FUsageEnergy extends Fragment {
 
         /*getting get data from data bases and populate cursor arrays**/
         Date date = new Date();
-        final Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();
         for (int i = 0; i < 7; i++) {
-            String searchDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(date);
+
+            String searchDate = DateFormat.getDateTimeInstance().format(date);
+            cal.add(Calendar.DATE, -i);
+            date = cal.getTime();
+
             carStandardCursors[i] = carDataBaseAdapter.getCarEntry(currentUsername, searchDate, Standard);
             carTruckCursors[i] = carDataBaseAdapter.getCarEntry(currentUsername, searchDate, Truck);
             carElectricCursors[i] = carDataBaseAdapter.getCarEntry(currentUsername, searchDate, Electric);
-            cal.add(Calendar.DATE, -1);
-            date = cal.getTime();
         }
-
 /*
 passing each cursor from each array through math method
 */
@@ -147,13 +149,22 @@ passing each cursor from each array through math method
         chart.setData(data);
         chart.invalidate();
 
-/*
+        final String[] Dates = new String[7];
+        for(int i = 0; i < 7; i++){
+            SimpleDateFormat formatter = new SimpleDateFormat("E", Locale.CANADA);
+            cal = Calendar.getInstance();
+            cal.add(Calendar.DATE, -i);
+            Date todate1 = cal.getTime();
+            String FinalDate = formatter.format(todate1);
+            Dates[i] = FinalDate;
+        }
+
 // X AXIS FORMATTING
         IAxisValueFormatter formatter = new IAxisValueFormatter() {
 
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return date[(int) value];
+                return Dates[(int) value];
             }
 
             // we don't draw numbers, so no decimal digits needed
@@ -166,7 +177,6 @@ passing each cursor from each array through math method
         xAxis.setValueFormatter(formatter);
         chart.setData(data);
         chart.invalidate();
-*/
 
 //buttons
 
@@ -210,7 +220,6 @@ passing each cursor from each array through math method
         for (m = 0; m < cursor.getCount(); m++) {
             distanceS1[m] = cursor.getInt(0);
             timeS1[m] = cursor.getInt(1);
-            Toast.makeText(context.getApplicationContext(), "hi", Toast.LENGTH_SHORT).show();
             cursor.moveToNext();
         }
         cursor.close();

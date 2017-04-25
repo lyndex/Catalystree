@@ -28,24 +28,24 @@ public class FProfile extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-//      set username to tv
+//        SET USER INFO TO TEXT VIEWS
         session = new SessionManagement(getActivity().getApplicationContext());
         TextView txtname = (TextView) rootView.findViewById(R.id.tvUsername);
         String currentUsername = session.getUsername();
-        txtname.setText(currentUsername);
-//      set email to tv
+        txtname.setText("Username: " + currentUsername);
         TextView txtemail = (TextView) rootView.findViewById(R.id.tvEmail);
         String currentEmail = session.getEmail();
-        txtemail.setText(currentEmail);
-// set date to tv
-        TextView txtdate = (TextView) rootView.findViewById(R.id.tvDate);
-        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
-        txtdate.setText(currentDate);
+        txtemail.setText("Email: " + currentEmail);
 
+//        VIEW DATE
+/*
+        TextView txtdate = (TextView) rootView.findViewById(R.id.tvDate);
+        String currentDate = new SimpleDateFormat("MM/dd/yyyy", Locale.CANADA).format(new Date());
+        txtdate.setText(currentDate);
+*/
         return rootView;
     }
 }
-
 //boolean check for empty name
 //                if (txtname == null)
 //        {

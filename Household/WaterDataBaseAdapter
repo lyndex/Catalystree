@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.widget.Toast;
 
 import com.example.catalystreeapp.Main.MasterDataBaseHelper;
 
@@ -28,7 +29,7 @@ public class WaterDataBaseAdapter {
 
     public WaterDataBaseAdapter(Context _context) {
         context = _context;
-        dbHelper = new MasterDataBaseHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
+        dbHelper = new MasterDataBaseHelper(context);
     }
 
     public WaterDataBaseAdapter open() throws SQLException {
@@ -45,7 +46,7 @@ public class WaterDataBaseAdapter {
     }
 
 
-    public void insertEntry(String username, String date, Integer cost) {
+    public void insertEntry(String username, String date, int cost) {
         ContentValues newValues = new ContentValues();
         // Assign values for each row.
         newValues.put("USERNAME", username);
@@ -54,7 +55,7 @@ public class WaterDataBaseAdapter {
 
         // Insert the row into your table
         db.insert("WATER", null, newValues);
-        ///Toast.makeText(context, "Reminder Is Successfully Saved", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Data Saved", Toast.LENGTH_SHORT).show();
     }
     public int deleteEntry(String username) {
         //String id=String.valueOf(ID);
@@ -64,17 +65,19 @@ public class WaterDataBaseAdapter {
         return numberOFEntriesDeleted;
     }
 
-    public String getSinlgeEntry(String username) {
-        Cursor cursor = db.query("ELECTRICITY", null, " USERNAME=?", new String[]{username}, null, null, null);
-        if (cursor.getCount() < 1) // UserName Not Exist
-        {
-            cursor.close();
-            return "NOT EXIST";
+    public Cursor getWaterEntry(String username) {
+
+        Cursor c = db.query(true, "WATER", new String[]{"date, cost"} ,"USERNAME=?", new String[]{username}, null, null, null, "10");
+        if (c.getCount() < 1) {
+            c.close();
         }
-        cursor.moveToFirst();
-        String type = cursor.getString(cursor.getColumnIndex("TYPE"));
-        cursor.close();
-        return type;
+        for (int i = 0; i < c.getCount(); i++) {
+            c.moveToFirst();
+            String date = c.getString(c.getColumnIndex("DATE"));
+            int cost = c.getInt(c.getColumnIndex("COST"));
+            c.moveToNext();
+        }
+        return c;
     }
 
     public void updateEntry(String username, String password, String email) {

@@ -1,6 +1,7 @@
 package com.example.catalystreeapp.Main;
 
-import android.content.SharedPreferences;
+import android.content.Context;
+import android.database.Cursor;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -8,26 +9,34 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.catalystreeapp.ClimateControl.ConditioningDataBaseAdapter;
+import com.example.catalystreeapp.ClimateControl.HeatingDataBaseAdapter;
+import com.example.catalystreeapp.Household.ElectricityDataBaseAdapter;
+import com.example.catalystreeapp.Household.GasDataBaseAdapter;
+import com.example.catalystreeapp.Household.WaterDataBaseAdapter;
 import com.example.catalystreeapp.MainFragments.FHome;
 import com.example.catalystreeapp.MainFragments.FInput;
 import com.example.catalystreeapp.MainFragments.FProfile;
 import com.example.catalystreeapp.MainFragments.FSettings;
-import com.example.catalystreeapp.MainFragments.FUsageEnergyW;
+import com.example.catalystreeapp.MainFragments.FUsageCost;
+import com.example.catalystreeapp.MainFragments.FUsageEnergy;
 import com.example.catalystreeapp.R;
+import com.example.catalystreeapp.Transportation.CarDataBaseAdapter;
+import com.example.catalystreeapp.Transportation.TransitDataBaseAdapter;
+import com.example.catalystreeapp.Transportation.WalkDataBaseAdapter;
 import com.example.catalystreeapp.Users.AlertDialogManager;
 import com.example.catalystreeapp.Users.SessionManagement;
 
-import java.util.HashMap;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -38,17 +47,13 @@ public class MainActivity extends AppCompatActivity{
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     android.support.v7.app.ActionBarDrawerToggle mDrawerToggle;
-    // Alert Dialog Manager
     AlertDialogManager alert = new AlertDialogManager();
-    // Session Manager Class
     SessionManagement session;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
          setContentView(R.layout.activity_main);
-
 
         // Session class instance
         session = new SessionManagement(getApplicationContext());
@@ -56,7 +61,6 @@ public class MainActivity extends AppCompatActivity{
 //        Toast.makeText(getApplicationContext(), "User Login Status: " + session.isLoggedIn(), Toast.LENGTH_SHORT).show();
 //      check if user is logged in
         session.checkLogin();
-
 
 //        set default displayed fragment
         String caller = getIntent().getStringExtra("caller");
@@ -70,7 +74,6 @@ public class MainActivity extends AppCompatActivity{
             tx.replace(R.id.content_frame, new FHome());
             tx.commit();
         }
-
 
         mTitle = mDrawerTitle = getTitle();
         mNavigationDrawerItemTitles= getResources().getStringArray(R.array.navigation_drawer_items_array);
@@ -95,6 +98,8 @@ public class MainActivity extends AppCompatActivity{
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         setupDrawerToggle();
+
+
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
@@ -121,7 +126,7 @@ public class MainActivity extends AppCompatActivity{
                 fragment = new FInput();
                 break;
             case 3:
-                fragment = new FUsageEnergyW();
+                fragment = new FUsageEnergy();
                 break;
             case 4:
                 fragment = new FSettings();
@@ -134,8 +139,9 @@ public class MainActivity extends AppCompatActivity{
 
             fragment.setArguments(getIntent().getExtras());
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+            FragmentManager fm = getSupportFragmentManager();
+            fm.beginTransaction().replace(R.id.content_frame, fragment).commit();
+
 
             mDrawerList.setItemChecked(position, true);
             mDrawerList.setSelection(position);

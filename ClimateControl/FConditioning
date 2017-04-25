@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.example.catalystreeapp.Main.MainActivity;
 import com.example.catalystreeapp.R;
-import com.example.catalystreeapp.Transportation.CarDataBaseAdapter;
 import com.example.catalystreeapp.Users.SessionManagement;
 
 import java.text.SimpleDateFormat;
@@ -25,7 +24,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class FConditioning extends Fragment implements AdapterView.OnItemSelectedListener {
+public class FConditioning extends Fragment {
 
     public FConditioning() {
     }
@@ -39,94 +38,48 @@ public class FConditioning extends Fragment implements AdapterView.OnItemSelecte
 //        inflating the view
         final View rootView = inflater.inflate(R.layout.fragment_conditioning, container, false);
 //        declaring stuff, not sure why it has to be final
-        final Spinner coolSpinner;
         final EditText editTexttemp, editTextMin;
         Button btnSubmitConditioning;
 
-//      create new car database
         conditioningDataBaseAdapter = new ConditioningDataBaseAdapter(getActivity());
         conditioningDataBaseAdapter = conditioningDataBaseAdapter.open();
 
         session = new SessionManagement(getActivity().getApplicationContext());
 
         // Get References of Views
-        coolSpinner = (Spinner) rootView.findViewById(R.id.spinner_conditioning_type);
-        editTexttemp = (EditText) rootView.findViewById(R.id.ET_conditioning_temp);
         editTextMin = (EditText) rootView.findViewById(R.id.ET_conditioning_min);
-
-        // Spinner click listener
-        coolSpinner.setOnItemSelectedListener(this);
-
-//        set default spinner selection
-        coolSpinner.setSelection(0);
-
-        // Spinner Drop down elements
-        List<String> categories = new ArrayList<>();
-        categories.add("Central");
-        categories.add("Baseboard");
-
-        // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, categories);
-
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // attaching data adapter to spinner
-        coolSpinner.setAdapter(dataAdapter);
 
 //      identifying the button
         btnSubmitConditioning = (Button) rootView.findViewById(R.id.button_conditioning_submit);
         btnSubmitConditioning.setOnClickListener(new View.OnClickListener() {
 
-                                            public void onClick(View v) {
+                                                     public void onClick(View v) {
 
 //              take username entry from login / sign up form via method in FProfile
 //                String currentUser = getSingleEntry();
-                                                String username = session.getUsername();
+                                                         String username = session.getUsername();
 
-                                                String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+                                                         SimpleDateFormat formata = new SimpleDateFormat("MM/dd/yyyy", Locale.CANADA);
+                                                         String date = formata.format(new Date());
 
-                                                String type = coolSpinner.getSelectedItem().toString();
-
-//                convert distance to integer
-                                                int distance = 0;
-                                                try {
-                                                    distance = Integer.parseInt(editTexttemp.getText().toString());
-                                                } catch (NumberFormatException nfe) {
-                                                    System.out.println("Could not parse distance " + nfe);
-                                                }
 //                convert minutes to integer
-                                                int time = 0;
-                                                try {
-                                                    time = Integer.parseInt(editTextMin.getText().toString());
-                                                } catch (NumberFormatException nfe) {
-                                                    System.out.println("Could not parse minutes" + nfe);
-                                                }
+                                                         int time = 0;
+                                                         try {
+                                                             time = Integer.parseInt(editTextMin.getText().toString());
+                                                         } catch (NumberFormatException nfe) {
+                                                             System.out.println("Could not parse minutes" + nfe);
+                                                         }
 
-                                                // Save the Data in Database
-                                                conditioningDataBaseAdapter.insertEntry(username, date, type, distance, time);
-                                                Toast.makeText(getActivity().getApplicationContext(), "Data Saved", Toast.LENGTH_LONG).show();
+                                                         // Save the Data in Database
+                                                         conditioningDataBaseAdapter.insertEntry(username, date, time);
+                                                         Toast.makeText(getActivity().getApplicationContext(), "Data Saved", Toast.LENGTH_LONG).show();
 //                                              link back to input menu
-                                                Intent intent = new Intent(getActivity(), MainActivity.class);
-                                                intent.putExtra("caller", "Input");
-                                                startActivity(intent);
-                                            }
-                                        }
+                                                         Intent intent = new Intent(getActivity(), MainActivity.class);
+                                                         intent.putExtra("caller", "Input");
+                                                         startActivity(intent);
+                                                     }
+                                                 }
         );
         return rootView;
-    }
-
-    //          spinner onclick
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        // On selecting a spinner item
-        String item = parent.getItemAtPosition(position).toString();
-        // Showing selected spinner item
-        Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
-    }
-
-    public void onNothingSelected(AdapterView<?> arg0) {
-        // need to add stuff here
-
     }
 }

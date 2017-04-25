@@ -52,13 +52,12 @@ public class FUsageEnergy extends Fragment {
     String Standard = "Standard", Truck = "Truck", Electric = "Electric/Hybrid";
     int dex = 49, size = 50;
     int m;
-    int standard = 3;
-    int truck = 4;
-    int electric = 2;
-    int carStandardTotal, carTruckTotal, carElectricTotal;
-    int[] carStandard, carTruck, carElectric;
+    int carStandardTotal, carTruckTotal, carElectricTotal, transitTotal, ACTotal, heatingTotal;
+    int[] carStandard, carTruck, carElectric, transit, Heating, AC;
     Context context;
     SessionManagement session;
+    //        TODO TEMPORARY
+    Cursor C;
 
 
     @Override
@@ -82,6 +81,7 @@ public class FUsageEnergy extends Fragment {
         conditioningDataBaseAdapter = new ConditioningDataBaseAdapter(context);
         conditioningDataBaseAdapter = conditioningDataBaseAdapter.open();
 
+
         /*list of cursor arrays and integer sum arrays**/
         Cursor[] carStandardCursors = new Cursor[7];
         carStandard = new int[size];
@@ -89,27 +89,38 @@ public class FUsageEnergy extends Fragment {
         carTruck = new int[size];
         Cursor[] carElectricCursors = new Cursor[7];
         carElectric = new int[size];
+//        Cursor[] transitCursors = new Cursor[7];
+//        transit = new int[size];
+//        Cursor[] ACCursors = new Cursor[7];
+//        AC = new int[size];
+//        Cursor[] HeatingCursors = new Cursor[7];
+//        Heating = new int[size];
+
 
         /*getting get data from data bases and populate cursor arrays**/
         Date date = new Date();
         Calendar cal = Calendar.getInstance();
         for (int i = 0; i < 7; i++) {
-
-            String searchDate = DateFormat.getDateTimeInstance().format(date);
-            cal.add(Calendar.DATE, -i);
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy", Locale.CANADA);
+            String searchDate = format.format(date);
+            cal.add(Calendar.DATE, -1);
             date = cal.getTime();
-
             carStandardCursors[i] = carDataBaseAdapter.getCarEntry(currentUsername, searchDate, Standard);
             carTruckCursors[i] = carDataBaseAdapter.getCarEntry(currentUsername, searchDate, Truck);
             carElectricCursors[i] = carDataBaseAdapter.getCarEntry(currentUsername, searchDate, Electric);
+//            transitCursors[i] = transitDataBaseAdapter.getTransitEntry(currentUsername, searchDate);
+//            ACCursors[i] = conditioningDataBaseAdapter.getConditioningEntry(currentUsername, searchDate);
+//            HeatingCursors[i] = heatingDataBaseAdapter.getHeatingEntry(currentUsername, searchDate, Electric);
         }
-/*
-passing each cursor from each array through math method
-*/
+
+//passing each cursor from each array through math method
         for (int i = 0; i < 7; i++) {
             Cursor ccursor = carStandardCursors[i];
             carStandardTotal = CalculateCarStandard(ccursor);
             carStandard[dex] = carStandardTotal;
+//            todo ^ THEY ARE ALL 0
+//            String ap = Integer.toString(carStandard[i]);
+//            Toast.makeText(context, ap, Toast.LENGTH_SHORT).show();
         }
         for (int i = 0; i < 7; i++) {
             Cursor ccursor = carTruckCursors[i];
@@ -121,6 +132,12 @@ passing each cursor from each array through math method
             carElectricTotal = CalculateCarElectric(ccursor);
             carElectric[dex] = carElectricTotal;
         }
+//        for (int i = 0; i < 7; i++) {
+//            Cursor ccursor = transitCursors[i];
+//            carElectricTotal = CalculateTransit(ccursor);
+//            transit[dex] = transitTotal;
+//        }
+
 
 //LINECHART STUFF
 
@@ -129,7 +146,7 @@ passing each cursor from each array through math method
 // SETTING DATA
 
         int[] Energy;
-        Energy = CalculateFinalEnergyies();
+        Energy = CalculateFinalEnergies();
 
 //        create lists for entries
         List<Entry> FinalVals = new ArrayList<>();
@@ -140,7 +157,7 @@ passing each cursor from each array through math method
 //            String k = e.toString();
 //            Toast.makeText(context.getApplicationContext(), k, Toast.LENGTH_SHORT).show();
         }
-        LineDataSet distanceSet = new LineDataSet(FinalVals, "Energy");
+        LineDataSet distanceSet = new LineDataSet(FinalVals, "Energy Used (kWh)");
 //        set the list to a line data set
         List<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(distanceSet);
@@ -213,69 +230,110 @@ passing each cursor from each array through math method
     }
 
     public int CalculateCarStandard(Cursor cursor) {
-        int[] distanceS1 = new int[size];
-        int[] timeS1 = new int[size];
+        int[] distance = new int[size];
 //        get all info from columns
         cursor.moveToFirst();
         for (m = 0; m < cursor.getCount(); m++) {
-            distanceS1[m] = cursor.getInt(0);
-            timeS1[m] = cursor.getInt(1);
+            distance[m] = cursor.getInt(0);
             cursor.moveToNext();
         }
-        cursor.close();
         int distancesum = 0;
-        for (int d : distanceS1)
-            distancesum += d;
-
-        int timesum = 0;
-        for (int t : timeS1) {
-            timesum += t;
+        for (int t : distance) {
+            distancesum += t;
         }
-        return distancesum * timesum * standard;
+//        todo distancesum prints a number that i didnt enter then 0s
+//        todo distanceS1[m] prints zeroes
+//        todo CONCLUSION: distanceS1 is an array of zeroes
+//        String u9 = Integer.toString(distancesum);
+//        Toast.makeText(context, u9, Toast.LENGTH_SHORT).show();
+        return (distancesum / 22) * 37;
     }
 
     public int CalculateCarTruck(Cursor cursor) {
         int[] distanceS2 = new int[size];
-        int[] timeS2 = new int[size];
         cursor.moveToFirst();
         for (m = 0; m < cursor.getCount(); m++) {
             distanceS2[m] = cursor.getInt(0);
-            timeS2[m] = cursor.getInt(1);
             cursor.moveToNext();
         }
         cursor.close();
         int distancesum = 0;
-        for (int adistanceS2 : distanceS2) {
-            distancesum += adistanceS2;
+        for (int add : distanceS2) {
+            distancesum += add;
         }
-        int timesum = 0;
-        for (Integer atimeS2 : timeS2) {
-            timesum += atimeS2;
-        }
-        return distancesum * timesum * truck;
+        return distancesum * 41 / 28;
     }
     public int CalculateCarElectric(Cursor cursor) {
         int[] distanceS2 = new int[size];
-        int[] timeS2 = new int[size];
         cursor.moveToFirst();
         for (m = 0; m < cursor.getCount(); m++) {
             distanceS2[m] = cursor.getInt(0);
-            timeS2[m] = cursor.getInt(1);
             cursor.moveToNext();
         }
         cursor.close();
         int distancesum = 0;
-        for (int adistanceS2 : distanceS2) {
-            distancesum += adistanceS2;
+        for (int add : distanceS2) {
+            distancesum += add;
+        }
+        return distancesum * 37 / 35;
+    }
+    public int CalculateTransit(Cursor cursor) {
+        int[] distance = new int[size];
+        int[] time = new int[size];
+        cursor.moveToFirst();
+        for (m = 0; m < cursor.getCount(); m++) {
+            distance[m] = cursor.getInt(0);
+            time[m] = cursor.getInt(1);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        int distancesum = 0;
+        for (int add : distance) {
+            distancesum += add;
         }
         int timesum = 0;
-        for (int atimeS2 : timeS2) {
-            timesum += atimeS2;
+        for (int add : time) {
+            timesum += add;
         }
-        return distancesum * timesum * electric;
+        return distancesum + timesum;
+    }
+    public int CalculateAC(Cursor cursor) {
+        int[] time = new int[size];
+        cursor.moveToFirst();
+        for (m = 0; m < cursor.getCount(); m++) {
+            time[m] = cursor.getInt(0);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        int timesum = 0;
+        for (int add : time) {
+            timesum += add;
+        }
+//        outputs units in kWh of electricity
+        return timesum / 90;
+    }
+    public int CalculateHeating(Cursor cursor) {
+        int[] temperature = new int[size];
+        int[] time = new int[size];
+        cursor.moveToFirst();
+        for (m = 0; m < cursor.getCount(); m++) {
+            temperature[m] = cursor.getInt(0);
+            time[m] = cursor.getInt(1);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        int tempSum = 0;
+        for (int add : temperature) {
+            tempSum += add;
+        }
+        int timeSum = 0;
+        for (int Atime : time) {
+            timeSum += Atime;
+        }
+        return tempSum + timeSum;
     }
 
-    public int[] CalculateFinalEnergyies() {
+    public int[] CalculateFinalEnergies() {
         int[] finalValues = new int[7];
         for (m = 0; m < 7; m++) {
             finalValues[m] = carStandard[m] + carTruck[m] + carElectric[m];

@@ -4,10 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
-import android.database.MergeCursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.catalystreeapp.Main.MasterDataBaseHelper;
@@ -15,8 +13,6 @@ import com.example.catalystreeapp.Main.MasterDataBaseHelper;
 public class CarDataBaseAdapter {
 
     private static String TAG = "CarDataBaseAdapter";
-    static final String DATABASE_NAME = "catalystree.db";
-    static final int DATABASE_VERSION = 1;
     public static final int NAME_COLUMN = 1;
 
     private static final String DATABASE_TABLE = "CAR";
@@ -24,7 +20,6 @@ public class CarDataBaseAdapter {
     public static final String COLUMN_DATE = "DATE";
     public static final String COLUMN_TYPE = "TYPE";
     public static final String COLUMN_DISTANCE = "DISTANCE";
-    public static final String COLUMN_TIME = "TIME";
 
     // Variable to hold the database instance
     public static SQLiteDatabase db;
@@ -35,7 +30,7 @@ public class CarDataBaseAdapter {
 
     public CarDataBaseAdapter(Context _context) {
         context = _context;
-        dbHelper = new MasterDataBaseHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
+        dbHelper = new MasterDataBaseHelper(context);
     }
 
     public CarDataBaseAdapter open() throws SQLException {
@@ -48,35 +43,31 @@ public class CarDataBaseAdapter {
     }
 
 
-    public void insertEntry(String username, String date, String type, Integer distance, Integer time) {
+    public void insertEntry(String username, String date, String type, int distance) {
         ContentValues newValues = new ContentValues();
-        // Assign values for each row.
         newValues.put("USERNAME", username);
         newValues.put("DATE", date);
         newValues.put("TYPE", type);
         newValues.put("DISTANCE", distance);
-        newValues.put("TIME", time);
 
-        // Insert the row into your table
         db.insert("CAR", null, newValues);
-        Toast.makeText(context, "Data Saved", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Data Saved", Toast.LENGTH_SHORT).show();
     }
     public Cursor getCarEntry(String username, String Day, String Type) {
 
-        Cursor carCursor = db.query(true, "CAR", new String[]{"date, type, distance, time"}, "USERNAME=? AND DATE=? AND TYPE=?", new String[]{username, Day, Type}, null, null, null, "50");
-        if (carCursor.getCount() < 1) {
-            MatrixCursor matrixCursor = new MatrixCursor(new String[]{"DISTANCE", "TIME"});
+        Cursor c = db.query(true, "CAR", new String[]{"DISTANCE"}, "USERNAME=? AND DATE=? AND TYPE=?", new String[]{username, Day, Type}, null, null, null, "50");
+        if (c.getCount() < 1) {
+            MatrixCursor matrixCursor = new MatrixCursor(new String[]{"DISTANCE"});
             matrixCursor.addRow(new Object[]{0, 0});
-            carCursor = new MergeCursor(new Cursor[]{matrixCursor, carCursor});
-//            Toast.makeText(context, "Floating Elephants", Toast.LENGTH_SHORT).show();
-        } else {
-            carCursor.moveToFirst();
-            for (int i = 0; i < carCursor.getCount(); i++) {
-                Integer distance = carCursor.getInt(carCursor.getColumnIndex("DISTANCE"));
-                Integer time = carCursor.getInt(carCursor.getColumnIndex("TIME"));
-            }
+            c = matrixCursor;
+//            Toast.makeText(context, "Nothing", Toast.LENGTH_SHORT).show();
+            c.close();
         }
-            return carCursor;
+            c.moveToFirst();
+            for (int i = 0; i < 7 && c.moveToNext(); ++i) {
+                int distance = c.getInt(c.getColumnIndex("DISTANCE"));
+            }
+            return c;
     }
 
     public void close() {

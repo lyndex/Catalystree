@@ -9,3 +9,5 @@ Stuck in between in the dark - never to be seen
 For all those things forgotten are left behind a shattered screen 
 
 Dreamer's wings get punctured
+
+By shards of shattered glass
